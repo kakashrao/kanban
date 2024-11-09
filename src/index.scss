@@ -54,6 +54,7 @@ body {
   box-sizing: border-box;
   width: 100vw;
   height: 100vh;
+  font-family: PlusJakartaSans, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 .ma-font-light {
@@ -105,20 +106,9 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
-  .btn {
-    --radius: 2rem;
-  }
-  .btn:hover {
-    --primary: 243 100% 82%;
-    --secondary: 221 69% 94%;
-    --destructive: 0 100% 80%;
-  }
-  .dark .btn:hover {
-    --secondary: 0 0% 100%;
-  }
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
+    --background: 235 16% 15%;
+    --foreground: 216 15% 57%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
@@ -142,6 +132,17 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+  .btn {
+    --radius: 2rem;
+  }
+  .btn:hover {
+    --primary: 243 100% 82%;
+    --secondary: 221 69% 94%;
+    --destructive: 0 100% 80%;
+  }
+  .dark .btn:hover {
+    --secondary: 0 0% 100%;
+  }
 }
 
 @layer base {
@@ -151,4 +152,58 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  .layout {
+    @apply bg-background text-foreground;
+  }
+}
+
+.heading-xl {
+  font-family: PlusJakartaSans, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+}
+
+.heading-l {
+  font-family: PlusJakartaSans, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 23px;
+}
+
+.heading-m {
+  font-family: PlusJakartaSans, sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 19px;
+}
+
+.heading-s {
+  font-family: PlusJakartaSans, sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 2.4px;
+}
+
+.body-l {
+  font-family: PlusJakartaSans, sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 23px;
+}
+
+.body-m {
+  font-family: PlusJakartaSans, sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.board-icon {
+  width: 15px;
+  height: 15px;
+  -webkit-mask: url("/assets/images/icon-board.svg") no-repeat center;
+  mask: url("/assets/images/icon-board.svg") no-repeat center;
+  mask-size: contain;
 }
