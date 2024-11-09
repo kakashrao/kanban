@@ -1,9 +1,14 @@
 import "./App.scss";
+import { Button } from "./components/ui/button";
 
 function App() {
   return (
     <>
-      <div className="ma-font-bold text-3xl font-bold underline">Akash</div>
+      <div className=" flex justify-center items-center h-[100vh]">
+        <Button variant="destructive" size="sm">
+          Button Secondary
+        </Button>
+      </div>
     </>
   );
 }
