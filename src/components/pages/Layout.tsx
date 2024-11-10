@@ -5,7 +5,7 @@ import SidePanel from "./SidePanel";
 
 const Layout: FC = () => {
   return (
-    <main className="layout flex h-screen dark">
+    <main className="layout flex h-screen">
       <section className="h-full w-[300px]">
         <SidePanel />
       </section>

@@ -7,7 +7,7 @@ interface MenuItem {
 }
 
 const SidePanel: FC = () => {
-  const isDarkMode = true;
+  const isDarkMode = false;
   const menu: MenuItem[] = [
     { label: "Platform Launch", id: 1 },
     { label: "Marketing Plan", id: 2 },
