@@ -1,4 +1,6 @@
+import { StoreSelectorType } from "@/store";
 import { FC } from "react";
+import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -9,11 +11,13 @@ import {
 } from "../ui/dropdown-menu";
 
 const Header: FC = () => {
-  const isDarkMode = false;
+  const isDarkTheme = useSelector<StoreSelectorType, boolean>(
+    (state) => state.theme.isDarkTheme
+  );
 
   return (
     <div
-      className={`h-full flex items-center justify-between px-6${isDarkMode ? " bg-[#2b2c37]" : ""}`}
+      className={`h-full flex items-center justify-between px-6${isDarkTheme ? " bg-[#2b2c37]" : ""}`}
     >
       <h1 className="m-0 heading-xl text-primary-foreground">
         Platform Launch

@@ -1,7 +1,7 @@
+@use "./scss/variables";
+
 @tailwind base;
 @tailwind utilities;
-
-@import "./scss/variables.scss";
 
 @font-face {
   font-family: "PlusJakartaSans";
@@ -243,6 +243,6 @@ div[role="menuitem"] {
   line-height: 19px;
 
   &:hover {
-    background-color: $grey-shade-1;
+    background-color: variables.$grey-shade-1;
   }
 }

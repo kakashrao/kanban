@@ -1,4 +1,7 @@
+import { StoreDispatchType, StoreSelectorType } from "@/store";
+import { themeActions } from "@/store/theme";
 import { FC } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Switch } from "../ui/switch";
 
 interface MenuItem {
@@ -7,12 +10,21 @@ interface MenuItem {
 }
 
 const SidePanel: FC = () => {
-  const isDarkMode = false;
+  const isDarkTheme = useSelector<StoreSelectorType, boolean>(
+    (state) => state.theme.isDarkTheme
+  );
+
+  const dispatch = useDispatch<StoreDispatchType>();
+
   const menu: MenuItem[] = [
     { label: "Platform Launch", id: 1 },
     { label: "Marketing Plan", id: 2 },
     { label: "Roadmap", id: 3 },
   ];
+
+  const handleThemeSwitch = () => {
+    dispatch(themeActions.toggle());
+  };
 
   return (
     <div
@@ -20,7 +32,7 @@ const SidePanel: FC = () => {
       className="h-full border-e border-[#3e3f4e] flex flex-col"
     >
       <div className="flex items-center h-[95px] pl-[32px]">
-        {isDarkMode ? (
+        {isDarkTheme ? (
           <img src="/assets/images/logo-light.svg" alt="Kanban Logo" />
         ) : (
           <img src="/assets/images/logo-dark.svg" alt="Kanban Logo" />
@@ -50,10 +62,10 @@ const SidePanel: FC = () => {
       <div className="mx-auto w-10/12 flex flex-col gap-4 mb-7 pt-3">
         <div
           id="dark-light-switch"
-          className={`flex items-center justify-center gap-6 h-[48px]${isDarkMode ? "" : " bg-[#f4f7fd]"}`}
+          className={`flex items-center justify-center gap-6 h-[48px]${isDarkTheme ? "" : " bg-[#f4f7fd]"}`}
         >
           <img src="/assets/images/icon-light-theme.svg" alt="Light Mode" />
-          <Switch variants="two-way" />
+          <Switch variants="two-way" onClick={handleThemeSwitch} />
           <img src="/assets/images/icon-dark-theme.svg" alt="Dark Mode" />
         </div>
         <p className="mb-0 heading-m flex items-center gap-2 text-[#828fa3] cursor-pointer">
