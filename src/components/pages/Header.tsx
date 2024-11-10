@@ -34,8 +34,12 @@ const Header: FC = () => {
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuGroup>
-              <DropdownMenuItem>Edit Board</DropdownMenuItem>
-              <DropdownMenuItem>Delete Board</DropdownMenuItem>
+              <DropdownMenuItem className="text-muted-foreground">
+                Edit Board
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-[#ea5555]">
+                Delete Board
+              </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>

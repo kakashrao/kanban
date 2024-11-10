@@ -113,7 +113,7 @@ body {
     --secondary: 220 69% 97%;
     --secondary-foreground: 242 48% 58%;
     --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
+    --muted-foreground: 216 15% 57%;
     --accent: 0 0% 96.1%;
     --accent-foreground: 0 0% 9%;
     --destructive: 0 78% 63%;
@@ -140,7 +140,7 @@ body {
     --secondary: 0 0% 100%;
     --secondary-foreground: 242 48% 58%;
     --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
+    --muted-foreground: 216 15% 57%;
     --accent: 0 0% 14.9%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 78% 63%;
@@ -244,5 +244,72 @@ div[role="menuitem"] {
 
   &:hover {
     background-color: variables.$grey-shade-1;
+  }
+}
+
+#sidepanel {
+  transition: width 0.5s;
+
+  &.open {
+    width: 300px;
+  }
+
+  &.close {
+    width: 0;
+
+    * {
+      display: none;
+    }
+  }
+
+  .board,
+  #hide-sidebar-button {
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+
+    .board-icon {
+      background-color: variables.$grey-shade-3;
+    }
+
+    &.active {
+      background-color: variables.$dark-purple;
+      color: variables.$white;
+
+      .board-icon {
+        background-color: variables.$white;
+      }
+    }
+
+    &:hover:not(.active) {
+      color: variables.$dark-purple;
+      background-color: variables.$grey-shade-1;
+
+      .board-icon {
+        background-color: variables.$dark-purple;
+      }
+    }
+  }
+}
+
+#show-sidebar-button {
+  position: fixed;
+  bottom: 28px;
+  left: 0;
+  height: 48px;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  background-color: variables.$dark-purple;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: width 0.5s;
+
+  &.open {
+    width: 56px;
+  }
+
+  &.close {
+    width: 0;
   }
 }

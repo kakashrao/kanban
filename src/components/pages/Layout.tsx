@@ -1,9 +1,9 @@
 import { StoreSelectorType } from "@/store";
 import { FC } from "react";
 import { useSelector } from "react-redux";
-import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import SidePanel from "./SidePanel";
+import Tasks from "./Tasks";
 
 const Layout: FC = () => {
   const isDarkTheme = useSelector<StoreSelectorType, boolean>(
@@ -12,7 +12,7 @@ const Layout: FC = () => {
 
   return (
     <main className={`layout flex h-screen${isDarkTheme ? " dark" : ""}`}>
-      <section className="h-full w-[300px]">
+      <section className="h-full]">
         <SidePanel />
       </section>
       <section className="grow flex flex-col h-full">
@@ -20,7 +20,7 @@ const Layout: FC = () => {
           <Header />
         </header>
         <section className="grow">
-          <Outlet />
+          <Tasks />
         </section>
       </section>
     </main>
