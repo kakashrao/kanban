@@ -10,9 +10,9 @@ const Layout: FC = () => {
         <SidePanel />
       </section>
       <section className="grow flex flex-col h-full">
-        <section>
+        <header className="h-[95px]">
           <Header />
-        </section>
+        </header>
         <section className="grow">
           <Outlet />
         </section>

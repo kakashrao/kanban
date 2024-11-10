@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind utilities;
 
+@import "./scss/variables.scss";
+
 @font-face {
   font-family: "PlusJakartaSans";
   src: url("./assets/fonts/PlusJakartaSans-Bold.ttf") format("ttf");
@@ -230,4 +232,16 @@ body {
   -webkit-mask: url("/assets/images/icon-board.svg") no-repeat center;
   mask: url("/assets/images/icon-board.svg") no-repeat center;
   mask-size: contain;
+}
+
+div[role="menuitem"] {
+  cursor: pointer;
+  font-family: PlusJakartaSans, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 19px;
+
+  &:hover {
+    background-color: $grey-shade-1;
+  }
 }
