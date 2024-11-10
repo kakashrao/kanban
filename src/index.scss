@@ -57,6 +57,26 @@ body {
   font-family: PlusJakartaSans, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
+* {
+  scrollbar-width: 8px;
+  /* width */
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #828fa3;
+    border-radius: 10px;
+  }
+}
+
 .ma-font-light {
   font-family: PlusJakartaSans, sans-serif;
   font-weight: 300;
@@ -98,7 +118,7 @@ body {
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
+    --ring: 0 0% 100%;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -124,8 +144,8 @@ body {
     --destructive: 0 78% 63%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 100%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -142,6 +162,10 @@ body {
   }
   .dark .btn:hover {
     --secondary: 0 0% 100%;
+  }
+  .two-way-switch
+    .data-\[state\=unchecked\]\:translate-x-0[data-state="unchecked"] {
+    --tw-translate-x: 0.05rem;
   }
 }
 
