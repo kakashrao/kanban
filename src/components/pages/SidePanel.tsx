@@ -29,11 +29,11 @@ const SidePanel: FC = () => {
 
       <div className="flex flex-col gap-5 mt-4 grow overflow-y-hidden">
         <p className="heading-s pl-[32px]">ALL BOARDS (3)</p>
-        <menu className="grow overflow-y-auto">
+        <menu className="overflow-y-auto">
           {menu.map((d) => (
             <li
               key={d.id}
-              className={`flex gap-4 mb-1 items-center heading-m h-[48px] pl-[32px] w-11/12${d.id === 1 ? " rounded-tr-full rounded-br-full bg-primary text-primary-foreground" : " cursor-pointer"}`}
+              className={`flex gap-4 mb-1 items-center heading-m h-[48px] pl-[32px] w-11/12${d.id === 1 ? " rounded-tr-full rounded-br-full bg-primary text-white" : " cursor-pointer text-[#828fa3]"}`}
             >
               <i
                 className={`board-icon${d.id === 1 ? " bg-white" : " bg-[#828fa3]"}`}
