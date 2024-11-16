@@ -114,8 +114,8 @@ body {
     --secondary-foreground: 242 48% 58%;
     --muted: 0 0% 96.1%;
     --muted-foreground: 216 15% 57%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 0 0% 100%;
+    --accent-foreground: 237 100% 4%;
     --destructive: 0 78% 63%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 89.8%;
@@ -141,8 +141,8 @@ body {
     --secondary-foreground: 242 48% 58%;
     --muted: 0 0% 14.9%;
     --muted-foreground: 216 15% 57%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 235 12% 19%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 78% 63%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 14.9%;
@@ -179,7 +179,7 @@ body {
   body {
     @apply bg-background text-foreground;
   }
-  .layout {
+  .kanban-layout {
     @apply bg-background text-foreground;
   }
 }
@@ -312,4 +312,8 @@ div[role="menuitem"] {
   &.close {
     width: 0;
   }
+}
+
+.input-error {
+  border: 1px solid variables.$dark-red;
 }

@@ -1,17 +1,11 @@
-import { StoreSelectorType } from "@/store";
 import { FC } from "react";
-import { useSelector } from "react-redux";
 import Header from "./Header";
 import SidePanel from "./SidePanel";
 import Tasks from "./Tasks";
 
 const Layout: FC = () => {
-  const isDarkTheme = useSelector<StoreSelectorType, boolean>(
-    (state) => state.theme.isDarkTheme
-  );
-
   return (
-    <main className={`layout flex h-screen${isDarkTheme ? " dark" : ""}`}>
+    <main className={`kanban-layout flex h-screen`}>
       <section className="h-full]">
         <SidePanel />
       </section>

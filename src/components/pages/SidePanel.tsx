@@ -3,6 +3,7 @@ import { themeActions } from "@/store/theme";
 import { FC, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Switch } from "../ui/switch";
+import CreateBoardDialog from "./CreateBoardDialog";
 
 interface MenuItem {
   label: string;
@@ -16,6 +17,8 @@ const SidePanel: FC = () => {
   const dispatch = useDispatch<StoreDispatchType>();
 
   const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [openBoardDialog, setOpenBoardDialog] = useState(false);
+
   const menu: MenuItem[] = [
     { label: "Platform Launch", id: 1 },
     { label: "Marketing Plan", id: 2 },
@@ -24,17 +27,27 @@ const SidePanel: FC = () => {
 
   const handleThemeSwitch = () => {
     dispatch(themeActions.toggle());
+
+    if (isDarkTheme) {
+      document.body.classList.remove("dark");
+    } else {
+      document.body.classList.add("dark");
+    }
   };
 
   const handlePanelToggle = () => {
     setIsPanelOpen((value) => !value);
   };
 
+  const handleDialogOpen = () => {
+    setOpenBoardDialog(true);
+  };
+
   return (
     <>
       <div
         id="sidepanel"
-        className={`h-full border-e border-[#3e3f4e] flex flex-col${isPanelOpen ? " open" : " close"}`}
+        className={`h-full border-e border-[#3e3f4e] flex flex-col bg-accent${isPanelOpen ? " open" : " close"}`}
       >
         <div className="flex items-center h-[95px] pl-[32px]">
           {isDarkTheme ? (
@@ -56,7 +69,10 @@ const SidePanel: FC = () => {
               </li>
             ))}
           </menu>
-          <span className="flex gap-2 items-center text-secondary-foreground heading-m cursor-pointer pl-[32px]">
+          <span
+            className="flex gap-2 items-center text-secondary-foreground heading-m cursor-pointer pl-[32px]"
+            onClick={handleDialogOpen}
+          >
             <i className="board-icon bg-primary"></i> + Create New Board
           </span>
         </div>
@@ -86,6 +102,11 @@ const SidePanel: FC = () => {
       >
         <img src="/assets/images/icon-show-sidebar.svg" alt="Open eye" />
       </div>
+
+      <CreateBoardDialog
+        open={openBoardDialog}
+        onClose={() => setOpenBoardDialog(false)}
+      />
     </>
   );
 };
