@@ -32,12 +32,12 @@ const CreateBoardDialog: FC<CreateBoardFCType> = ({
           <DialogTitle className="heading-l">Add New Board</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col gap-1.5 mb-4">
-          <Label className="body-m">Name</Label>
+          <Label className="body-m">Board Name</Label>
           <Input type="text" placeholder="e.g. Web Design" required />
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label className="body-m">Columns</Label>
-          <div className="flex flex-col gap-2.5">
+          <Label className="body-m">Board Columns</Label>
+          <div className="flex flex-col gap-3">
             <Input type="text" placeholder="e.g. Todo" />
             <Button variant="secondary">+ Add New Column</Button>
           </div>
