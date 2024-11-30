@@ -10,12 +10,12 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
-type CreateBoardFCType = {
+type CreateEditBoardProps = {
   open: boolean;
   onClose?: () => void;
 };
 
-const CreateBoardDialog: FC<CreateBoardFCType> = ({
+const CreateEditBoardDialog: FC<CreateEditBoardProps> = ({
   open,
   onClose = () => {},
 }) => {
@@ -50,4 +50,4 @@ const CreateBoardDialog: FC<CreateBoardFCType> = ({
   );
 };
 
-export default CreateBoardDialog;
+export default CreateEditBoardDialog;

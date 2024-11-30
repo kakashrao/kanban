@@ -7,13 +7,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import ConfirmationDialog, { ConfirmationRef } from "./ConfirmationDialog";
+import ConfirmationDialog, {
+  ConfirmationDialogRef,
+} from "./ConfirmationDialog";
 
 const Header: FC = () => {
-  const confirmDialogRef = useRef<ConfirmationRef>(null);
+  const confirmDialogRef = useRef<ConfirmationDialogRef>(null);
 
   const handleDeleteBoard = () => {
-    (confirmDialogRef.current as ConfirmationRef).open();
+    (confirmDialogRef.current as ConfirmationDialogRef).open();
   };
 
   return (

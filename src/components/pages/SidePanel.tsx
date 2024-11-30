@@ -3,7 +3,7 @@ import { themeActions } from "@/store/theme";
 import { FC, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Switch } from "../ui/switch";
-import CreateBoardDialog from "./CreateBoardDialog";
+import CreateEditBoardDialog from "./CreateEditBoardDialog";
 
 interface MenuItem {
   label: string;
@@ -103,7 +103,7 @@ const SidePanel: FC = () => {
         <img src="/assets/images/icon-show-sidebar.svg" alt="Open eye" />
       </div>
 
-      <CreateBoardDialog
+      <CreateEditBoardDialog
         open={openBoardDialog}
         onClose={() => setOpenBoardDialog(false)}
       />
