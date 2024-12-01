@@ -1,4 +1,4 @@
-import { FC, useRef } from "react";
+import { FC, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -10,12 +10,18 @@ import {
 import ConfirmationDialog, {
   ConfirmationDialogRef,
 } from "./ConfirmationDialog";
+import CreateEditTaskDialog from "./CreateEditTaskDialog";
 
 const Header: FC = () => {
   const confirmDialogRef = useRef<ConfirmationDialogRef>(null);
+  const [taskDialogOpen, setTaskDialogOpen] = useState(false);
 
   const handleDeleteBoard = () => {
     (confirmDialogRef.current as ConfirmationDialogRef).open();
+  };
+
+  const handleCreateTask = () => {
+    setTaskDialogOpen(true);
   };
 
   return (
@@ -27,7 +33,7 @@ const Header: FC = () => {
           Platform Launch
         </h1>
         <div className="flex items-center gap-4">
-          <Button>+ Add New Task</Button>
+          <Button onClick={handleCreateTask}>+ Add New Task</Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <img
@@ -52,6 +58,10 @@ const Header: FC = () => {
           </DropdownMenu>
         </div>
       </div>
+      <CreateEditTaskDialog
+        open={taskDialogOpen}
+        onClose={() => setTaskDialogOpen(false)}
+      />
       <ConfirmationDialog
         ref={confirmDialogRef}
         title="Delete this board?"

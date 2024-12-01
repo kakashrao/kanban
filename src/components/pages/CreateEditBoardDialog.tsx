@@ -38,7 +38,14 @@ const CreateEditBoardDialog: FC<CreateEditBoardProps> = ({
         <div className="flex flex-col gap-1.5">
           <Label className="body-m">Board Columns</Label>
           <div className="flex flex-col gap-3">
-            <Input type="text" placeholder="e.g. Todo" />
+            <div className="flex justify-between items-center gap-3">
+              <Input type="text" placeholder="e.g. Todo" />
+              <img
+                src="/assets/images/icon-cross.svg"
+                alt="Cross"
+                className="cursor-pointer"
+              />
+            </div>
             <Button variant="secondary">+ Add New Column</Button>
           </div>
         </div>
