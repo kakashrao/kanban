@@ -52,7 +52,7 @@ const CreateEditTaskDialog: FC<CreateEditTaskProps> = ({
             required
           />
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5 mb-4">
           <Label className="body-m">Subtasks</Label>
           <div className="flex flex-col gap-3">
             <div className="flex justify-between items-center gap-3">
