@@ -1,3 +1,4 @@
+import { BasicDialogProps } from "@/interfaces/Shared";
 import { FC } from "react";
 import { Button } from "../ui/button";
 import {
@@ -10,12 +11,7 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
-type CreateEditBoardProps = {
-  open: boolean;
-  onClose?: () => void;
-};
-
-const CreateEditBoardDialog: FC<CreateEditBoardProps> = ({
+const CreateEditBoardDialog: FC<BasicDialogProps> = ({
   open,
   onClose = () => {},
 }) => {

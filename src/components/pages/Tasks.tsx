@@ -1,14 +1,21 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Button } from "../ui/button";
+import TaskInfoDialog from "./TaskInfoDialog";
 
 const Tasks: FC = () => {
+  const [open, setOpen] = useState(false);
+
   const handleAddColumn = () => {
     console.log("Add column");
   };
 
   return (
-    <div className="h-full flex justify-center items-center">
-      <EmptyTasks onAdd={handleAddColumn} />
+    <div
+      className="h-full flex justify-center items-center"
+      onClick={() => setOpen(true)}
+    >
+      {/* <EmptyTasks onAdd={handleAddColumn} /> */}
+      <TaskInfoDialog open={open} onClose={() => setOpen(false)} />
     </div>
   );
 };

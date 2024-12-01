@@ -1,3 +1,4 @@
+import { BasicDialogProps } from "@/interfaces/Shared";
 import { FC } from "react";
 import { Button } from "../ui/button";
 import {
@@ -19,12 +20,7 @@ import {
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
 
-type CreateEditTaskProps = {
-  open: boolean;
-  onClose?: () => void;
-};
-
-const CreateEditTaskDialog: FC<CreateEditTaskProps> = ({
+const CreateEditTaskDialog: FC<BasicDialogProps> = ({
   open,
   onClose = () => {},
 }) => {
