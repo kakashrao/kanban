@@ -1,3 +1,4 @@
+@forward "./scss/variables";
 @use "./scss/variables";
 
 @tailwind base;
@@ -245,7 +246,11 @@ div[role="menuitem"] {
 
 .select-item:hover,
 div[role="menuitem"]:hover {
-  background-color: variables.$grey-shade-1;
+  @include variables.switch(
+    background-color,
+    variables.$grey-shade-1,
+    variables.$grey-shade-4
+  );
 }
 
 #sidepanel {
@@ -320,8 +325,12 @@ div[role="menuitem"]:hover {
 }
 
 .sub-task-info {
-  background-color: variables.$grey-shade-1;
-  color: variables.$grey-shade-7;
+  @include variables.switch(
+    background-color,
+    variables.$grey-shade-1,
+    variables.$grey-shade-6
+  );
+  @include variables.switch(color, variables.$grey-shade-7, variables.$white);
 
   &.completed {
     color: variables.$grey-shade-3;
@@ -329,33 +338,9 @@ div[role="menuitem"]:hover {
 }
 
 .text-general {
-  color: variables.$grey-shade-7;
+  @include variables.switch(color, variables.$grey-shade-7, variables.$white);
 }
 
 label {
-  color: variables.$grey-shade-3;
-}
-
-.dark {
-  .select-item:hover,
-  div[role="menuitem"]:hover {
-    background-color: #3e3f4e;
-  }
-
-  .sub-task-info {
-    background-color: variables.$grey-shade-6;
-    color: variables.$white;
-
-    &.completed {
-      color: variables.$grey-shade-3;
-    }
-  }
-
-  .text-general {
-    color: variables.$white;
-  }
-
-  label {
-    color: variables.$white;
-  }
+  @include variables.switch(color, variables.$grey-shade-3, variables.$white);
 }

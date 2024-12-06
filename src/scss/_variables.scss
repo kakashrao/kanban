@@ -10,3 +10,11 @@ $dark-purple: #635fc7;
 $white: #fff;
 $light-red: #ff9898;
 $dark-red: #ea5555;
+
+@mixin switch($property, $light-value, $dark-value) {
+  #{$property}: $light-value;
+
+  .dark & {
+    #{$property}: $dark-value;
+  }
+}
