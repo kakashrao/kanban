@@ -5,7 +5,7 @@ import TaskInfoDialog from "./TaskInfoDialog";
 
 const Tasks: FC = () => {
   const [open, setOpen] = useState(false);
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState([1, 2, 3, 4, 5, 6, 7, 7, 8, 8]);
 
   const handleAddColumn = () => {
     console.log("Add column");
@@ -17,7 +17,15 @@ const Tasks: FC = () => {
       className="h-full flex justify-center items-center"
       onClick={() => setOpen(true)}
     >
-      {tasks.length ? <TaskColumn /> : <EmptyTasks onAdd={handleAddColumn} />}
+      {tasks.length ? (
+        <section className="flex gap-8 bg-content w-full h-full p-7 overflow-auto">
+          {tasks.map((task) => (
+            <TaskColumn />
+          ))}
+        </section>
+      ) : (
+        <EmptyTasks onAdd={handleAddColumn} />
+      )}
       <TaskInfoDialog open={open} onClose={() => setOpen(false)} />
     </div>
   );

@@ -5,15 +5,15 @@ import Tasks from "./Tasks";
 
 const Layout: FC = () => {
   return (
-    <main className={`kanban-layout flex h-screen`}>
-      <section className="h-full]">
-        <SidePanel />
-      </section>
-      <section className="grow flex flex-col h-full">
-        <header className="h-[95px]">
-          <Header />
-        </header>
-        <section className="grow">
+    <main className={`kanban-layout flex flex-col h-screen`}>
+      <header className="h-[95px] w-full">
+        <Header />
+      </header>
+      <section className="grow flex h-full">
+        <section className="h-full">
+          <SidePanel />
+        </section>
+        <section className="grow w-0">
           <Tasks />
         </section>
       </section>

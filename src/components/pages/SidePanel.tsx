@@ -14,9 +14,12 @@ const SidePanel: FC = () => {
   const isDarkTheme = useSelector<StoreSelectorType, boolean>(
     (state) => state.theme.isDarkTheme
   );
+  const isPanelOpen = useSelector<StoreSelectorType, boolean>(
+    (state) => state.theme.sidePanelOpen
+  );
+
   const dispatch = useDispatch<StoreDispatchType>();
 
-  const [isPanelOpen, setIsPanelOpen] = useState(true);
   const [openBoardDialog, setOpenBoardDialog] = useState(false);
 
   const menu: MenuItem[] = [
@@ -26,7 +29,7 @@ const SidePanel: FC = () => {
   ];
 
   const handleThemeSwitch = () => {
-    dispatch(themeActions.toggle());
+    dispatch(themeActions.toggleTheme());
 
     if (isDarkTheme) {
       document.body.classList.remove("dark");
@@ -36,7 +39,7 @@ const SidePanel: FC = () => {
   };
 
   const handlePanelToggle = () => {
-    setIsPanelOpen((value) => !value);
+    dispatch(themeActions.toggleSidePanel());
   };
 
   const handleDialogOpen = () => {
@@ -47,16 +50,8 @@ const SidePanel: FC = () => {
     <>
       <div
         id="sidepanel"
-        className={`h-full border-e border-[#3e3f4e] flex flex-col bg-accent${isPanelOpen ? " open" : " close"}`}
+        className={`h-full border-e theme-border flex flex-col bg-panel${isPanelOpen ? " open" : " close"}`}
       >
-        <div className="flex items-center h-[95px] pl-[32px]">
-          {isDarkTheme ? (
-            <img src="/assets/images/logo-light.svg" alt="Kanban Logo" />
-          ) : (
-            <img src="/assets/images/logo-dark.svg" alt="Kanban Logo" />
-          )}
-        </div>
-
         <div className="flex flex-col gap-5 mt-4 grow overflow-y-hidden">
           <p className="heading-s pl-[32px]">ALL BOARDS (3)</p>
           <menu className="overflow-y-auto">

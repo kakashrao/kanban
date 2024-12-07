@@ -4,10 +4,14 @@ const themeSlice = createSlice({
   name: "Theme",
   initialState: {
     isDarkTheme: false,
+    sidePanelOpen: true,
   },
   reducers: {
-    toggle(state) {
+    toggleTheme(state) {
       state.isDarkTheme = !state.isDarkTheme;
+    },
+    toggleSidePanel(state) {
+      state.sidePanelOpen = !state.sidePanelOpen;
     },
   },
 });

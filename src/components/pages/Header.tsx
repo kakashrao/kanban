@@ -1,4 +1,6 @@
+import { StoreSelectorType } from "@/store";
 import { FC, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -13,6 +15,13 @@ import ConfirmationDialog, {
 import CreateEditTaskDialog from "./CreateEditTaskDialog";
 
 const Header: FC = () => {
+  const isDarkTheme = useSelector<StoreSelectorType, boolean>(
+    (state) => state.theme.isDarkTheme
+  );
+  const isPanelOpen = useSelector<StoreSelectorType, boolean>(
+    (state) => state.theme.sidePanelOpen
+  );
+
   const confirmDialogRef = useRef<ConfirmationDialogRef>(null);
   const [taskDialogOpen, setTaskDialogOpen] = useState(false);
 
@@ -25,9 +34,19 @@ const Header: FC = () => {
   };
 
   return (
-    <>
+    <div className="flex items-center h-full">
       <div
-        className={`h-full flex items-center justify-between px-6 bg-accent`}
+        className={`flex items-center h-[95px] pl-[32px] w-[300px] border-e theme-border${!isPanelOpen ? " border-b" : ""}`}
+      >
+        {isDarkTheme ? (
+          <img src="/assets/images/logo-light.svg" alt="Kanban Logo" />
+        ) : (
+          <img src="/assets/images/logo-dark.svg" alt="Kanban Logo" />
+        )}
+      </div>
+
+      <div
+        className={`h-full flex items-center justify-between grow px-6 bg-header border-b theme-border`}
       >
         <h1 className="m-0 heading-xl text-primary-foreground">
           Platform Launch
@@ -69,7 +88,7 @@ const Header: FC = () => {
         confirmButtonText="Delete"
         cancelButtonText="Cancel"
       />
-    </>
+    </div>
   );
 };
 

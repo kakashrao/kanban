@@ -65,6 +65,7 @@ body {
   /* width */
   ::-webkit-scrollbar {
     width: 5px;
+    height: 5px;
   }
 
   /* Track */
@@ -337,10 +338,76 @@ div[role="menuitem"]:hover {
   }
 }
 
+.bg-content {
+  @include variables.switch(
+    background-color,
+    variables.$grey-shade-1,
+    variables.$grey-shade-6
+  );
+}
+
+.bg-panel {
+  @include variables.switch(
+    background-color,
+    variables.$white,
+    variables.$grey-shade-6
+  );
+}
+
+.bg-header {
+  @include variables.switch(
+    background-color,
+    variables.$white,
+    variables.$grey-shade-5
+  );
+}
+
 .text-general {
   @include variables.switch(color, variables.$grey-shade-7, variables.$white);
 }
 
 label {
   @include variables.switch(color, variables.$grey-shade-3, variables.$white);
+}
+
+.theme-border {
+  @include variables.switch(
+    border-color,
+    variables.$grey-shade-2,
+    variables.$grey-shade-4
+  );
+}
+
+.bg-task-column {
+  @include variables.switch(
+    background-color,
+    variables.$grey-shade-2,
+    variables.$grey-shade-5
+  );
+}
+
+.colored-point {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: red;
+}
+
+.task-card {
+  height: auto;
+  min-height: 88px;
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+
+  @include variables.switch(
+    background-color,
+    variables.$white,
+    variables.$grey-shade-5
+  );
 }
