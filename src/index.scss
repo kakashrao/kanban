@@ -245,6 +245,14 @@ div[role="menuitem"] {
   line-height: 19px;
 }
 
+div[role="alertdialog"],
+div[role="dialog"] {
+  max-height: 95vh;
+  overflow-y: auto;
+  width: 480px;
+  max-width: 95vw;
+}
+
 .select-item:hover,
 div[role="menuitem"]:hover {
   @include variables.switch(
@@ -296,6 +304,10 @@ div[role="menuitem"]:hover {
       }
     }
   }
+}
+
+.header-logo {
+  width: 300px;
 }
 
 #show-sidebar-button {
@@ -410,4 +422,20 @@ label {
     variables.$white,
     variables.$grey-shade-5
   );
+}
+
+@media screen and (max-width: 900px) {
+  .heading-xl {
+    font-size: 16px;
+  }
+
+  #sidepanel {
+    &.open {
+      width: 250px;
+    }
+  }
+
+  .header-logo {
+    width: 250px;
+  }
 }

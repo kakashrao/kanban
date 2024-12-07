@@ -63,10 +63,10 @@ const ConfirmationDialog = forwardRef<
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex justify-between w-full">
-            <AlertDialogAction className="w-6/12">
+            <AlertDialogAction style={{ width: "48%" }}>
               {confirmButtonText}
             </AlertDialogAction>
-            <AlertDialogCancel className="w-6/12" onClick={handleClose}>
+            <AlertDialogCancel style={{ width: "48%" }} onClick={handleClose}>
               {cancelButtonText}
             </AlertDialogCancel>
           </AlertDialogFooter>

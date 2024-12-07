@@ -1,3 +1,5 @@
+import useWindowDimensions from "@/hooks/windowDimensions";
+import { isMobile } from "@/lib/utils";
 import { StoreSelectorType } from "@/store";
 import { FC, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -23,6 +25,8 @@ const Header: FC = () => {
   );
 
   const confirmDialogRef = useRef<ConfirmationDialogRef>(null);
+
+  const { screenWidth } = useWindowDimensions();
   const [taskDialogOpen, setTaskDialogOpen] = useState(false);
 
   const handleDeleteBoard = () => {
@@ -35,24 +39,50 @@ const Header: FC = () => {
 
   return (
     <div className="flex items-center h-full">
-      <div
-        className={`flex items-center h-[95px] pl-[32px] w-[300px] border-e theme-border${!isPanelOpen ? " border-b" : ""}`}
-      >
-        {isDarkTheme ? (
-          <img src="/assets/images/logo-light.svg" alt="Kanban Logo" />
-        ) : (
-          <img src="/assets/images/logo-dark.svg" alt="Kanban Logo" />
-        )}
-      </div>
+      {!isMobile(screenWidth) && (
+        <div
+          className={`flex items-center h-[95px] pl-[32px] header-logo border-e theme-border${!isPanelOpen ? " border-b bg-header" : ""}`}
+        >
+          {isDarkTheme ? (
+            <img src="/assets/images/logo-light.svg" alt="Kanban Logo" />
+          ) : (
+            <img src="/assets/images/logo-dark.svg" alt="Kanban Logo" />
+          )}
+        </div>
+      )}
 
       <div
-        className={`h-full flex items-center justify-between grow px-6 bg-header border-b theme-border`}
+        className={`h-full flex items-center justify-between grow border-b theme-border bg-header${isMobile(screenWidth) ? " px-4" : " px-6"}`}
       >
-        <h1 className="m-0 heading-xl text-primary-foreground">
-          Platform Launch
-        </h1>
         <div className="flex items-center gap-4">
-          <Button onClick={handleCreateTask}>+ Add New Task</Button>
+          {isMobile(screenWidth) && (
+            <img src="/assets/images/logo-mobile.svg" alt="Kanban Logo" />
+          )}
+          <h1 className="m-0 heading-xl text-primary-foreground flex gap-2 items-center">
+            Platform Launch
+            {isMobile(screenWidth) && (
+              <img
+                src="/assets/images/icon-chevron-down.svg"
+                alt="down-chevron"
+              />
+            )}
+          </h1>
+        </div>
+        <div className="flex items-center gap-4">
+          {isMobile(screenWidth) ? (
+            <Button
+              size="icon"
+              className="w-[48px] h-[32px] rounded-lg"
+              onClick={handleCreateTask}
+            >
+              <img
+                src="/assets/images/icon-add-task-mobile.svg"
+                alt="Add Task Icon"
+              />
+            </Button>
+          ) : (
+            <Button onClick={handleCreateTask}>+ Add New Task</Button>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <img

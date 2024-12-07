@@ -17,7 +17,7 @@ const Tasks: FC = () => {
       className="h-full flex justify-center items-center"
       onClick={() => setOpen(true)}
     >
-      {tasks.length ? (
+      {!tasks.length ? (
         <section className="flex gap-8 bg-content w-full h-full p-7 overflow-auto">
           {tasks.map((task) => (
             <TaskColumn />
@@ -33,7 +33,7 @@ const Tasks: FC = () => {
 
 const EmptyTasks: FC<{ onAdd: () => void }> = () => {
   return (
-    <div className="flex flex-col justify-center items-center gap-6 text-muted-foreground">
+    <div className="flex flex-col justify-center items-center gap-6 text-muted-foreground px-2 text-center">
       <p className="heading-l">
         The board is empty. Create a new column to get started.
       </p>
