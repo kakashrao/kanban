@@ -13,13 +13,13 @@ const Layout: FC = () => {
       <header className="h-[95px] w-full">
         <Header />
       </header>
-      <section className="grow flex h-full">
+      <section className="grow flex h-0">
         {!isMobile(screenWidth) && (
           <section className="h-full">
             <SidePanel />
           </section>
         )}
-        <section className="grow w-0">
+        <section className="grow w-0 h-full">
           <Tasks />
         </section>
       </section>

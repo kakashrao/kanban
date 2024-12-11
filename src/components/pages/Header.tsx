@@ -15,6 +15,7 @@ import ConfirmationDialog, {
   ConfirmationDialogRef,
 } from "./ConfirmationDialog";
 import CreateEditTaskDialog from "./CreateEditTaskDialog";
+import SidePanel from "./SidePanel";
 
 const Header: FC = () => {
   const isDarkTheme = useSelector<StoreSelectorType, boolean>(
@@ -61,10 +62,17 @@ const Header: FC = () => {
           <h1 className="m-0 heading-xl text-primary-foreground flex gap-2 items-center">
             Platform Launch
             {isMobile(screenWidth) && (
-              <img
-                src="/assets/images/icon-chevron-down.svg"
-                alt="down-chevron"
-              />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <img
+                    src="/assets/images/icon-chevron-down.svg"
+                    alt="down-chevron"
+                  />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <SidePanel />
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </h1>
         </div>

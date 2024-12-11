@@ -312,7 +312,7 @@ div[role="menuitem"]:hover {
 
 #show-sidebar-button {
   position: fixed;
-  bottom: 28px;
+  bottom: 30px;
   left: 0;
   height: 48px;
   border-top-right-radius: 30px;
@@ -432,10 +432,19 @@ label {
   #sidepanel {
     &.open {
       width: 250px;
+      max-height: calc(100vh - 100px);
     }
   }
 
   .header-logo {
     width: 250px;
+  }
+
+  .bg-panel {
+    @include variables.switch(
+      background-color,
+      variables.$white,
+      variables.$grey-shade-5
+    );
   }
 }
