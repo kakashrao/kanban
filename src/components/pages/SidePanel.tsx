@@ -29,12 +29,6 @@ const SidePanel: FC = () => {
     { label: "Platform Launch", id: 1 },
     { label: "Marketing Plan", id: 2 },
     { label: "Roadmap", id: 3 },
-    { label: "Platform Launch", id: 1 },
-    { label: "Marketing Plan", id: 2 },
-    { label: "Roadmap", id: 3 },
-    { label: "Platform Launch", id: 1 },
-    { label: "Marketing Plan", id: 2 },
-    { label: "Roadmap", id: 3 },
   ];
 
   const handleThemeSwitch = () => {
