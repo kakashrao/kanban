@@ -9,7 +9,7 @@ class Column implements ColumnSchema {
 
   constructor(obj: ColumnSchema) {
     const { id, name, boardId } = obj;
-    this.id = id;
+    this.id = id ?? "";
     this.name = name;
     this.boardId = boardId;
 
@@ -38,16 +38,13 @@ class Column implements ColumnSchema {
       name: this.name,
       boardId: this.boardId,
     };
-    let result;
 
     if (!column.id) {
       column.id = uuidv4();
-      result = await db.add("columns", column);
+      await db.add("columns", column);
     } else {
-      result = await db.put("columns", column);
+      await db.put("columns", column);
     }
-
-    console.log(result);
 
     return column;
   }

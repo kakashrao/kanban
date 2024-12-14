@@ -7,7 +7,7 @@ class Board implements BoardSchema {
   name: string;
   constructor(obj: BoardSchema) {
     const { id, name } = obj;
-    this.id = id;
+    this.id = id ?? "";
     this.name = name;
   }
 
@@ -25,16 +25,14 @@ class Board implements BoardSchema {
     this.validate();
 
     const board = { id: this.id, name: this.name };
-    let result;
 
     if (!board.id) {
       board.id = uuidv4();
-      result = await db.add("boards", board);
+      await db.add("boards", board);
     } else {
-      result = await db.put("boards", board);
+      await db.put("boards", board);
     }
 
-    console.log(result);
     return board;
   }
 }

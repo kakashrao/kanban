@@ -11,7 +11,7 @@ class Task implements TaskSchema {
 
   constructor(obj: TaskSchema) {
     const { id, title, description, subtasks, columnId } = obj;
-    this.id = id;
+    this.id = id ?? "";
     this.title = title;
     this.description = description ?? "";
     this.subtasks = subtasks ?? [];
@@ -46,16 +46,14 @@ class Task implements TaskSchema {
       subtasks: this.subtasks,
       columnId: this.columnId,
     };
-    let result;
 
     if (!task.id) {
       task.id = uuidv4();
-      result = await db.add("tasks", task);
+      await db.add("tasks", task);
     } else {
-      result = await db.put("tasks", task);
+      await db.put("tasks", task);
     }
 
-    console.log(result);
     return task;
   }
 }

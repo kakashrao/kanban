@@ -6,6 +6,7 @@ interface TaskSchema {
     title: string;
     isCompleted: boolean;
   }[];
+  boardId: string;
   columnId: string; // Column Id
 }
 

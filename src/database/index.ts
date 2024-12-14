@@ -17,9 +17,18 @@ const initializeDB = async () => {
   const db = await openDB<KanbanDbSchema>(DATABASE_NAME, DATABASE_VERSION, {
     upgrade(db) {
       for (const storeName of storeNames) {
-        console.log(db.objectStoreNames);
         if (!db.objectStoreNames.contains(storeName)) {
-          db.createObjectStore(storeName, { keyPath: "id" });
+          const store = db.createObjectStore(storeName, { keyPath: "id" });
+
+          switch (storeName) {
+            case "columns":
+              store.createIndex("column_board_idx", "boardId");
+              break;
+            case "tasks":
+              store.createIndex("task_board_idx", "boardId");
+              break;
+            default:
+          }
         }
       }
     },
