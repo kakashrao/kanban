@@ -3,7 +3,7 @@ import Column from "../models/column";
 import { BoardRequestSchema } from "../schemas/board";
 import { KanbanDB } from "../types";
 
-async function addBoard(db: KanbanDB | null, value: BoardRequestSchema) {
+async function createBoard(db: KanbanDB | null, value: BoardRequestSchema) {
   const board = new Board({ id: value.id, name: value.name });
 
   try {
@@ -53,4 +53,4 @@ async function updateBoard(db: KanbanDB | null, value: BoardRequestSchema) {
   }
 }
 
-export { addBoard, updateBoard };
+export { createBoard, updateBoard };
