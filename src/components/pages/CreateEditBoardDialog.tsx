@@ -1,5 +1,6 @@
 import { DBContext } from "@/database";
 import BoardSchema, { BoardRequestSchema } from "@/database/schemas/board";
+import ColumnSchema from "@/database/schemas/column";
 import { createBoard } from "@/database/services/board";
 import { useToast } from "@/hooks/use-toast";
 import { BasicDialogProps } from "@/interfaces/Shared";
@@ -28,10 +29,22 @@ const CreateEditBoardDialog: FC<CreateEditBoardDialogProps> = ({
   const nameInputRef = useRef<HTMLInputElement>();
 
   const [isInProgress, setIsInProgress] = useState(false);
+  const [columns, setColumns] = useState<ColumnSchema[]>([]);
 
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
       onClose();
+    }
+  };
+
+  const handleColumnChange = (action: "ADD" | "REMOVE", columnIdx?: number) => {
+    if (action === "ADD") {
+      setColumns((values) => [...values, { id: "", name: "", boardId: "" }]);
+    } else if (action === "REMOVE") {
+      setColumns((values) => {
+        values.splice(columnIdx, 1);
+        return [...values];
+      });
     }
   };
 
@@ -90,15 +103,26 @@ const CreateEditBoardDialog: FC<CreateEditBoardDialogProps> = ({
         <div className="flex flex-col gap-1.5">
           <Label className="body-m">Board Columns</Label>
           <div className="flex flex-col gap-3">
-            <div className="flex justify-between items-center gap-3">
-              <Input type="text" placeholder="e.g. Todo" />
-              <img
-                src="/assets/images/icon-cross.svg"
-                alt="Cross"
-                className="cursor-pointer"
-              />
-            </div>
-            <Button variant="secondary">+ Add New Column</Button>
+            {columns.map((column, columnIdx) => (
+              <div
+                key={column.id || columnIdx}
+                className="flex justify-between items-center gap-3"
+              >
+                <Input type="text" placeholder="e.g. Todo" />
+                <img
+                  src="/assets/images/icon-cross.svg"
+                  alt="Cross"
+                  className="cursor-pointer"
+                  onClick={() => handleColumnChange("REMOVE", columnIdx)}
+                />
+              </div>
+            ))}
+            <Button
+              variant="secondary"
+              onClick={() => handleColumnChange("ADD")}
+            >
+              + Add New Column
+            </Button>
           </div>
         </div>
         <DialogFooter>
