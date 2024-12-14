@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import ColumnSchema from "../schemas/column";
+import { KanbanDB } from "../types";
 
 class Column implements ColumnSchema {
   id: string;
@@ -23,6 +24,32 @@ class Column implements ColumnSchema {
     } else if (!this.boardId || typeof this.boardId !== "string") {
       throw new Error("Board Id is required.");
     }
+  }
+
+  async save(db: KanbanDB | null) {
+    if (!db) {
+      return;
+    }
+
+    this.validate();
+
+    const column = {
+      id: this.id,
+      name: this.name,
+      boardId: this.boardId,
+    };
+    let result;
+
+    if (!column.id) {
+      column.id = uuidv4();
+      result = await db.add("columns", column);
+    } else {
+      result = await db.put("columns", column);
+    }
+
+    console.log(result);
+
+    return column;
   }
 }
 

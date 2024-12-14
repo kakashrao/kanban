@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import TaskSchema from "../schemas/task";
+import { KanbanDB } from "../types";
 
 class Task implements TaskSchema {
   id: string;
@@ -29,6 +30,33 @@ class Task implements TaskSchema {
     } else if (this.description && typeof this.description !== "string") {
       throw new Error("Please provide valid description.");
     }
+  }
+
+  async save(db: KanbanDB | null) {
+    if (!db) {
+      return;
+    }
+
+    this.validate();
+
+    const task = {
+      id: this.id,
+      title: this.title,
+      description: this.description,
+      subtasks: this.subtasks,
+      columnId: this.columnId,
+    };
+    let result;
+
+    if (!task.id) {
+      task.id = uuidv4();
+      result = await db.add("tasks", task);
+    } else {
+      result = await db.put("tasks", task);
+    }
+
+    console.log(result);
+    return task;
   }
 }
 
