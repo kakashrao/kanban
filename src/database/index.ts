@@ -1,6 +1,7 @@
 import { openDB } from "idb";
 import { createContext } from "react";
-import { KanbanDB, KanbanDbSchema } from "./types";
+import KanbanDbSchema from "./schemas/db";
+import { KanbanDB } from "./types";
 
 const DATABASE_NAME = "KANBAN";
 const DATABASE_VERSION = 2;
