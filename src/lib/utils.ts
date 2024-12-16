@@ -1,10 +1,12 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-export function cn(...inputs: ClassValue[]) {
+function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function isMobile(width: number) {
+function isMobile(width: number) {
   return width < 450;
 }
+
+export { cn, isMobile };

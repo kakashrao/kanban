@@ -11,7 +11,7 @@ import {
 import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 import { forwardRef, useImperativeHandle, useState } from "react";
 
-export interface ConfirmationDialogProps {
+interface ConfirmationDialogProps {
   title: string;
   message: string;
   confirmButtonText: string;
@@ -19,7 +19,7 @@ export interface ConfirmationDialogProps {
   onClose?: () => void;
 }
 
-export interface ConfirmationDialogRef {
+interface ConfirmationDialogRef {
   open: () => void;
   close: () => void;
 }
@@ -77,3 +77,4 @@ const ConfirmationDialog = forwardRef<
 );
 
 export default ConfirmationDialog;
+export type { ConfirmationDialogProps, ConfirmationDialogRef };

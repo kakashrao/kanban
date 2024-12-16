@@ -2,10 +2,10 @@ import useWindowDimensions from "@/hooks/windowDimensions";
 import { isMobile } from "@/lib/utils";
 import { StoreDispatchType, StoreSelectorType } from "@/store";
 import { themeActions } from "@/store/theme";
-import { FC, useState } from "react";
+import { FC, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Switch } from "../ui/switch";
-import CreateEditBoardDialog from "./CreateEditBoardDialog";
+import CreateEditBoardDialog, { BoardDialogRef } from "./CreateEditBoardDialog";
 
 interface MenuItem {
   label: string;
@@ -23,7 +23,7 @@ const SidePanel: FC = () => {
   const dispatch = useDispatch<StoreDispatchType>();
 
   const { screenWidth } = useWindowDimensions();
-  const [openBoardDialog, setOpenBoardDialog] = useState(false);
+  const boardDialogRef = useRef<BoardDialogRef | null>(null);
 
   const menu: MenuItem[] = [
     { label: "Platform Launch", id: 1 },
@@ -45,8 +45,8 @@ const SidePanel: FC = () => {
     dispatch(themeActions.toggleSidePanel());
   };
 
-  const handleDialogOpen = () => {
-    setOpenBoardDialog(true);
+  const handleAddBoard = () => {
+    boardDialogRef.current.open();
   };
 
   return (
@@ -72,7 +72,7 @@ const SidePanel: FC = () => {
           </menu>
           <span
             className="flex gap-2 items-center text-secondary-foreground heading-m cursor-pointer pl-[32px]"
-            onClick={handleDialogOpen}
+            onClick={handleAddBoard}
           >
             <i className="board-icon bg-primary"></i> + Create New Board
           </span>
@@ -113,10 +113,7 @@ const SidePanel: FC = () => {
         </div>
       )}
 
-      <CreateEditBoardDialog
-        open={openBoardDialog}
-        onClose={() => setOpenBoardDialog(false)}
-      />
+      <CreateEditBoardDialog ref={boardDialogRef} />
     </>
   );
 };

@@ -3,53 +3,81 @@ import BoardSchema, { BoardRequestSchema } from "@/database/schemas/board";
 import ColumnSchema from "@/database/schemas/column";
 import { createBoard } from "@/database/services/board";
 import { useToast } from "@/hooks/use-toast";
-import { BasicDialogProps } from "@/interfaces/Shared";
-import { FC, useContext, useRef, useState } from "react";
+import { forwardRef, useContext, useImperativeHandle, useState } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { v4 as uuidv4 } from "uuid";
 import { Button } from "../ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
-interface CreateEditBoardDialogProps extends BasicDialogProps {
+interface BoardDialogProps {
+  onClose?: (v: string) => void;
   value?: BoardSchema;
 }
 
-const CreateEditBoardDialog: FC<CreateEditBoardDialogProps> = ({
-  open,
-  onClose = () => {},
-}) => {
+interface BoardDialogRef {
+  open: () => void;
+  close: () => void;
+}
+
+interface BoardForm {
+  name: string;
+  columns: ColumnSchema[];
+}
+
+const CreateEditBoardDialog = forwardRef<
+  BoardDialogRef | null,
+  BoardDialogProps
+>(({ onClose = () => {} }, ref) => {
+  const [isOpen, setIsOpen] = useState(false);
   const db = useContext(DBContext);
   const { toast } = useToast();
-  const nameInputRef = useRef<HTMLInputElement>();
 
   const [isInProgress, setIsInProgress] = useState(false);
-  const [columns, setColumns] = useState<ColumnSchema[]>([]);
 
-  const handleOpenChange = (isOpen: boolean) => {
-    if (!isOpen) {
-      onClose();
-    }
+  const { control, handleSubmit, reset } = useForm<BoardForm>({
+    defaultValues: {
+      name: "",
+      columns: [],
+    },
+  });
+  const {
+    fields: columns,
+    remove: removeColumn,
+    append: addColumn,
+  } = useFieldArray<BoardForm>({
+    control, // control props comes from useForm (optional: if you are using FormProvider)
+    name: "columns", // unique name for your Field Array
+  });
+
+  useImperativeHandle(ref, () => {
+    return {
+      open() {
+        setIsOpen(true);
+        addNewColumn();
+      },
+      close() {
+        setIsOpen(false);
+        reset();
+      },
+    };
+  });
+
+  const handleClose = (value?: string) => {
+    setIsOpen(false);
+    onClose(value);
+    reset();
   };
 
-  const handleColumnChange = (action: "ADD" | "REMOVE", columnIdx?: number) => {
-    if (action === "ADD") {
-      setColumns((values) => [...values, { id: "", name: "", boardId: "" }]);
-    } else if (action === "REMOVE") {
-      setColumns((values) => {
-        values.splice(columnIdx, 1);
-        return [...values];
-      });
-    }
+  const addNewColumn = () => {
+    addColumn({ id: "column_" + uuidv4(), name: "", boardId: "" });
   };
 
-  const handleCreateBoard = async () => {
-    if (!nameInputRef.current.value) {
+  const handleCreateBoard = async (data: BoardForm) => {
+    if (!data) return;
+
+    if (!data.name) {
       toast({
         title: "Error",
         description: "Please enter board name.",
@@ -63,12 +91,20 @@ const CreateEditBoardDialog: FC<CreateEditBoardDialogProps> = ({
     try {
       const board: BoardRequestSchema = {
         id: "",
-        name: nameInputRef.current.value,
-        columns: [],
+        name: data.name,
+        columns: data.columns
+          .filter((c) => c.name)
+          .map((c) => {
+            return {
+              ...c,
+              id: c.id.startsWith("column_") ? "" : c.id,
+            };
+          }),
       };
 
       await createBoard(db, board);
 
+      handleClose("Success");
       toast({
         title: "Success",
         description: "Board created successfully.",
@@ -86,57 +122,63 @@ const CreateEditBoardDialog: FC<CreateEditBoardDialogProps> = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={isOpen} onOpenChange={() => isOpen && handleClose()}>
       <DialogContent className="bg-accent">
         <DialogHeader className="mb-4">
           <DialogTitle className="heading-l">Add New Board</DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col gap-1.5 mb-4">
-          <Label className="body-m">Board Name</Label>
-          <Input
-            type="text"
-            placeholder="e.g. Web Design"
-            ref={nameInputRef}
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label className="body-m">Board Columns</Label>
-          <div className="flex flex-col gap-3">
-            {columns.map((column, columnIdx) => (
-              <div
-                key={column.id || columnIdx}
-                className="flex justify-between items-center gap-3"
-              >
-                <Input type="text" placeholder="e.g. Todo" />
-                <img
-                  src="/assets/images/icon-cross.svg"
-                  alt="Cross"
-                  className="cursor-pointer"
-                  onClick={() => handleColumnChange("REMOVE", columnIdx)}
+        <form onSubmit={handleSubmit(handleCreateBoard)}>
+          <div className="flex flex-col gap-1.5 mb-4">
+            <Label className="body-m">Board Name</Label>
+            <Controller
+              name="name"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  type="text"
+                  placeholder="e.g. Web Design"
+                  required
                 />
-              </div>
-            ))}
-            <Button
-              variant="secondary"
-              onClick={() => handleColumnChange("ADD")}
-            >
-              + Add New Column
-            </Button>
+              )}
+            />
           </div>
-        </div>
-        <DialogFooter>
-          <Button
-            className="w-full mt-2"
-            disabled={isInProgress}
-            onClick={handleCreateBoard}
-          >
+          <div className="flex flex-col gap-1.5">
+            <Label className="body-m">Board Columns</Label>
+            <div className="flex flex-col gap-3">
+              {columns.map((column, columnIdx) => (
+                <div
+                  key={column.id}
+                  className="flex justify-between items-center gap-3"
+                >
+                  <Controller
+                    name={`columns.${columnIdx}.name`}
+                    control={control}
+                    render={({ field }) => (
+                      <Input {...field} type="text" placeholder="e.g. Todo" />
+                    )}
+                  />
+                  <img
+                    src="/assets/images/icon-cross.svg"
+                    alt="Cross"
+                    className="cursor-pointer"
+                    onClick={() => removeColumn(columnIdx)}
+                  />
+                </div>
+              ))}
+              <Button type="button" variant="secondary" onClick={addNewColumn}>
+                + Add New Column
+              </Button>
+            </div>
+          </div>
+          <Button className="w-full mt-3" type="submit" disabled={isInProgress}>
             Create New Board
           </Button>
-        </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
-};
+});
 
 export default CreateEditBoardDialog;
+export type { BoardDialogProps, BoardDialogRef };
