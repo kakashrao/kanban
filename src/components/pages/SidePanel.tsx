@@ -1,40 +1,40 @@
+import { DBContext } from "@/database";
 import useWindowDimensions from "@/hooks/windowDimensions";
 import { isMobile } from "@/lib/utils";
 import { StoreDispatchType, StoreSelectorType } from "@/store";
+import { boardActions, fetchBoards } from "@/store/board";
 import { themeActions } from "@/store/theme";
-import { FC, useRef } from "react";
+import { FC, useContext, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Switch } from "../ui/switch";
 import CreateEditBoardDialog, { BoardDialogRef } from "./CreateEditBoardDialog";
 
-interface MenuItem {
-  label: string;
-  id: number;
-}
-
 const SidePanel: FC = () => {
-  const isDarkTheme = useSelector<StoreSelectorType, boolean>(
-    (state) => state.theme.isDarkTheme
+  const themeStore = useSelector<StoreSelectorType, StoreSelectorType["theme"]>(
+    (state) => state.theme
   );
-  const isPanelOpen = useSelector<StoreSelectorType, boolean>(
-    (state) => state.theme.sidePanelOpen
+  const boardStore = useSelector<StoreSelectorType, StoreSelectorType["board"]>(
+    (state) => state.board
   );
 
   const dispatch = useDispatch<StoreDispatchType>();
+  const db = useContext(DBContext);
 
   const { screenWidth } = useWindowDimensions();
   const boardDialogRef = useRef<BoardDialogRef | null>(null);
 
-  const menu: MenuItem[] = [
-    { label: "Platform Launch", id: 1 },
-    { label: "Marketing Plan", id: 2 },
-    { label: "Roadmap", id: 3 },
-  ];
+  useEffect(() => {
+    dispatch(fetchBoards(db));
+  }, [db, dispatch]);
+
+  const handleBoardChange = (id: string) => {
+    dispatch(boardActions.changeBoard(id));
+  };
 
   const handleThemeSwitch = () => {
     dispatch(themeActions.toggleTheme());
 
-    if (isDarkTheme) {
+    if (themeStore.isDarkTheme) {
       document.body.classList.remove("dark");
     } else {
       document.body.classList.add("dark");
@@ -53,20 +53,23 @@ const SidePanel: FC = () => {
     <>
       <div
         id="sidepanel"
-        className={`h-full border-e theme-border flex flex-col justify-between gap-5 pt-4 overflow-y-auto bg-panel${isPanelOpen ? " open" : " close"}`}
+        className={`h-full border-e theme-border flex flex-col justify-between gap-5 pt-4 overflow-y-auto bg-panel${themeStore.sidePanelOpen ? " open" : " close"}`}
       >
         <div className="flex flex-col gap-5 grow">
-          <p className="heading-s pl-[32px]">ALL BOARDS (3)</p>
+          <p className="heading-s pl-[32px]">
+            ALL BOARDS ({boardStore.boards.length})
+          </p>
           <menu
             className="overflow-y-auto flex flex-col gap-2"
             style={{ maxHeight: "calc(100vh - 353px)", minHeight: "150px" }}
           >
-            {menu.map((d) => (
+            {boardStore.boards.map((d) => (
               <li
                 key={d.id}
-                className={`board flex gap-4 items-center heading-m min-h-[48px] pl-[32px] w-11/12 ${d.id === 1 ? " active" : " cursor-pointer text-muted-foreground"}`}
+                className={`board flex gap-4 items-center heading-m min-h-[48px] pl-[32px] w-11/12 ${d.id === boardStore.active ? " active" : " cursor-pointer text-muted-foreground"}`}
+                onClick={() => handleBoardChange(d.id)}
               >
-                <i className="board-icon"></i> {d.label}
+                <i className="board-icon"></i> {d.name}
               </li>
             ))}
           </menu>
@@ -81,7 +84,7 @@ const SidePanel: FC = () => {
         <div className="flex flex-col gap-5 pb-8">
           <div
             id="dark-light-switch"
-            className={`flex items-center justify-center gap-6 h-[48px] mx-auto w-10/12 rounded${isDarkTheme ? "" : " bg-[#f4f7fd]"}`}
+            className={`flex items-center justify-center gap-6 h-[48px] mx-auto w-10/12 rounded${themeStore.isDarkTheme ? "" : " bg-[#f4f7fd]"}`}
           >
             <img src="/assets/images/icon-light-theme.svg" alt="Light Mode" />
             <Switch variants="two-way" onClick={handleThemeSwitch} />
@@ -106,7 +109,7 @@ const SidePanel: FC = () => {
       {!isMobile(screenWidth) && (
         <div
           id="show-sidebar-button"
-          className={`${isPanelOpen ? "close" : "open"}`}
+          className={`${themeStore.sidePanelOpen ? "close" : "open"}`}
           onClick={handlePanelToggle}
         >
           <img src="/assets/images/icon-show-sidebar.svg" alt="Open eye" />

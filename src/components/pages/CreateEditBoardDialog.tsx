@@ -3,8 +3,11 @@ import BoardSchema, { BoardRequestSchema } from "@/database/schemas/board";
 import ColumnSchema from "@/database/schemas/column";
 import { createBoard } from "@/database/services/board";
 import { useToast } from "@/hooks/use-toast";
+import { StoreDispatchType } from "@/store";
+import { fetchBoards } from "@/store/board";
 import { forwardRef, useContext, useImperativeHandle, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
@@ -35,6 +38,7 @@ const CreateEditBoardDialog = forwardRef<
   const { toast } = useToast();
 
   const [isInProgress, setIsInProgress] = useState(false);
+  const dispatch = useDispatch<StoreDispatchType>();
 
   const { control, handleSubmit, reset } = useForm<BoardForm>({
     defaultValues: {
@@ -110,6 +114,8 @@ const CreateEditBoardDialog = forwardRef<
         description: "Board created successfully.",
         variant: "success",
       });
+
+      dispatch(fetchBoards(db));
     } catch (error: any) {
       toast({
         title: "Error",

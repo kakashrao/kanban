@@ -1,7 +1,7 @@
 import useWindowDimensions from "@/hooks/windowDimensions";
 import { isMobile } from "@/lib/utils";
 import { StoreSelectorType } from "@/store";
-import { FC, useRef, useState } from "react";
+import { FC, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import {
@@ -26,16 +26,16 @@ const Header: FC = () => {
   );
 
   const confirmDialogRef = useRef<ConfirmationDialogRef>(null);
+  const taskDialogRef = useRef(null);
 
   const { screenWidth } = useWindowDimensions();
-  const [taskDialogOpen, setTaskDialogOpen] = useState(false);
 
   const handleDeleteBoard = () => {
     (confirmDialogRef.current as ConfirmationDialogRef).open();
   };
 
   const handleCreateTask = () => {
-    setTaskDialogOpen(true);
+    taskDialogRef.current.open();
   };
 
   return (
@@ -115,10 +115,7 @@ const Header: FC = () => {
           </DropdownMenu>
         </div>
       </div>
-      <CreateEditTaskDialog
-        open={taskDialogOpen}
-        onClose={() => setTaskDialogOpen(false)}
-      />
+      <CreateEditTaskDialog ref={taskDialogRef} />
       <ConfirmationDialog
         ref={confirmDialogRef}
         title="Delete this board?"

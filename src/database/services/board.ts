@@ -53,4 +53,15 @@ async function updateBoard(db: KanbanDB | null, value: BoardRequestSchema) {
   }
 }
 
-export { createBoard, updateBoard };
+async function getAllBoards(db: KanbanDB) {
+  try {
+    const boards = await db.getAll("boards");
+    return boards;
+  } catch (error) {
+    throw new Error(
+      error?.message ?? "Something went wrong, please try again."
+    );
+  }
+}
+
+export { createBoard, getAllBoards, updateBoard };
