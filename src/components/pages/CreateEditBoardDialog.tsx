@@ -24,6 +24,7 @@ import { Label } from "../ui/label";
 interface BoardDialogProps {
   onClose?: (v: string) => void;
   isEditMode?: boolean;
+  columnsOnly?: boolean;
 }
 
 interface BoardDialogRef {
@@ -40,7 +41,7 @@ interface BoardForm {
 const CreateEditBoardDialog = forwardRef<
   BoardDialogRef | null,
   BoardDialogProps
->(({ onClose = () => {}, isEditMode = false }, ref) => {
+>(({ onClose = () => {}, isEditMode = false, columnsOnly = false }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const db = useContext(DBContext);
   const { toast } = useToast();
@@ -171,6 +172,7 @@ const CreateEditBoardDialog = forwardRef<
                   {...field}
                   type="text"
                   placeholder="e.g. Web Design"
+                  disabled={columnsOnly}
                   required
                 />
               )}
@@ -188,15 +190,22 @@ const CreateEditBoardDialog = forwardRef<
                     name={`columns.${columnIdx}.name`}
                     control={control}
                     render={({ field }) => (
-                      <Input {...field} type="text" placeholder="e.g. Todo" />
+                      <Input
+                        {...field}
+                        type="text"
+                        placeholder="e.g. Todo"
+                        disabled={columnsOnly && !!column.boardId}
+                      />
                     )}
                   />
-                  <img
-                    src="/assets/images/icon-cross.svg"
-                    alt="Cross"
-                    className="cursor-pointer"
-                    onClick={() => removeColumn(columnIdx)}
-                  />
+                  {(!columnsOnly || !column.boardId) && (
+                    <img
+                      src="/assets/images/icon-cross.svg"
+                      alt="Cross"
+                      className="cursor-pointer"
+                      onClick={() => removeColumn(columnIdx)}
+                    />
+                  )}
                 </div>
               ))}
               <Button type="button" variant="secondary" onClick={addNewColumn}>

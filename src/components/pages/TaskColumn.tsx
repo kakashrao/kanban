@@ -1,6 +1,10 @@
 import { FC, useState } from "react";
 
-const TaskColumn: FC = () => {
+interface TaskColumnProps {
+  onAddColumn?: () => void;
+}
+
+const TaskColumn: FC<TaskColumnProps> = ({ onAddColumn = () => {} }) => {
   const [tasks, setTasks] = useState([]);
 
   return (
@@ -11,7 +15,9 @@ const TaskColumn: FC = () => {
       </div>
       {tasks.length ? (
         <div className="grow border rounded bg-task-column flex justify-center items-center">
-          <p className="heading-xl cursor-pointer">+ New Column</p>
+          <p className="heading-xl cursor-pointer" onClick={onAddColumn}>
+            + New Column
+          </p>
         </div>
       ) : (
         <div className="grow">

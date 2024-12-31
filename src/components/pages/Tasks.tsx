@@ -1,17 +1,19 @@
 import { StoreSelectorType } from "@/store";
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
+import CreateEditBoardDialog, { BoardDialogRef } from "./CreateEditBoardDialog";
 import TaskColumn from "./TaskColumn";
 import TaskInfoDialog from "./TaskInfoDialog";
 
 const Tasks: FC = () => {
+  const boardDialogRef = useRef<BoardDialogRef | null>(null);
+
   const [open, setOpen] = useState(false);
   const [tasks, setTasks] = useState([1, 2, 3, 4, 5, 6, 7, 7, 8, 8]);
 
   const handleAddColumn = () => {
-    console.log("Add column");
-    setTasks([]);
+    (boardDialogRef.current as BoardDialogRef).open();
   };
 
   return (
@@ -19,18 +21,23 @@ const Tasks: FC = () => {
       {!tasks.length ? (
         <section className="flex gap-8 bg-content w-full h-full p-7 overflow-auto">
           {tasks.map((task) => (
-            <TaskColumn />
+            <TaskColumn onAddColumn={handleAddColumn} />
           ))}
         </section>
       ) : (
         <EmptyTasks onAdd={handleAddColumn} />
       )}
       <TaskInfoDialog open={open} onClose={() => setOpen(false)} />
+      <CreateEditBoardDialog
+        ref={boardDialogRef}
+        columnsOnly={true}
+        isEditMode={true}
+      />
     </div>
   );
 };
 
-const EmptyTasks: FC<{ onAdd: () => void }> = () => {
+const EmptyTasks: FC<{ onAdd: () => void }> = ({ onAdd = () => {} }) => {
   const activeBoardId = useSelector<StoreSelectorType, string>(
     (state) => state.board.activeEntity
   );
@@ -42,7 +49,7 @@ const EmptyTasks: FC<{ onAdd: () => void }> = () => {
           <p className="heading-l">
             The board is empty. Create a new column to get started.
           </p>
-          <Button>+ Add New Column</Button>
+          <Button onClick={onAdd}>+ Add New Column</Button>
         </>
       ) : (
         <>
