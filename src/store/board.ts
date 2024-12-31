@@ -11,8 +11,8 @@ const fetchBoards = createAsyncThunk("fetchBoards", async (db: KanbanDB) => {
 const initialState = {
   isFetching: false,
   hasError: false,
-  boards: [] satisfies BoardSchema[],
-  active: "",
+  entities: [] satisfies BoardSchema[] as BoardSchema[],
+  activeEntity: "",
 };
 
 const boardSlice = createSlice({
@@ -20,17 +20,17 @@ const boardSlice = createSlice({
   initialState,
   reducers: {
     changeBoard(state, action) {
-      state.active = action.payload;
+      state.activeEntity = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchBoards.fulfilled, (state, action) => {
-      state.boards = action.payload;
+      state.entities = action.payload;
       state.isFetching = false;
       state.hasError = false;
 
-      if (!state.active && action.payload.length) {
-        state.active = action.payload[0].id;
+      if (!state.activeEntity && action.payload.length) {
+        state.activeEntity = action.payload[0].id;
       }
     });
     builder.addCase(fetchBoards.pending, (state) => {
@@ -42,9 +42,15 @@ const boardSlice = createSlice({
       state.hasError = true;
     });
   },
+  selectors: {
+    getActiveBoard(state) {
+      return state.entities.find((d) => d.id === state.activeEntity);
+    },
+  },
 });
 
 const boardActions = boardSlice.actions;
 const boardReducer = boardSlice.reducer;
+const boardSelectors = boardSlice.selectors;
 
-export { boardActions, boardReducer, fetchBoards };
+export { boardActions, boardReducer, boardSelectors, fetchBoards };

@@ -1,4 +1,5 @@
 import { DBContext } from "@/database";
+import { useToast } from "@/hooks/use-toast";
 import useWindowDimensions from "@/hooks/windowDimensions";
 import { isMobile } from "@/lib/utils";
 import { StoreDispatchType, StoreSelectorType } from "@/store";
@@ -20,12 +21,24 @@ const SidePanel: FC = () => {
   const dispatch = useDispatch<StoreDispatchType>();
   const db = useContext(DBContext);
 
+  const { toast } = useToast();
+
   const { screenWidth } = useWindowDimensions();
   const boardDialogRef = useRef<BoardDialogRef | null>(null);
 
   useEffect(() => {
     dispatch(fetchBoards(db));
   }, [db, dispatch]);
+
+  useEffect(() => {
+    if (boardStore.hasError) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch boards, please refresh the page.",
+        variant: "destructive",
+      });
+    }
+  }, [boardStore, toast]);
 
   const handleBoardChange = (id: string) => {
     dispatch(boardActions.changeBoard(id));
@@ -57,16 +70,16 @@ const SidePanel: FC = () => {
       >
         <div className="flex flex-col gap-5 grow">
           <p className="heading-s pl-[32px]">
-            ALL BOARDS ({boardStore.boards.length})
+            ALL BOARDS ({boardStore.entities.length})
           </p>
           <menu
             className="overflow-y-auto flex flex-col gap-2"
-            style={{ maxHeight: "calc(100vh - 353px)", minHeight: "150px" }}
+            style={{ maxHeight: "calc(100vh - 353px)" }}
           >
-            {boardStore.boards.map((d) => (
+            {boardStore.entities.map((d) => (
               <li
                 key={d.id}
-                className={`board flex gap-4 items-center heading-m min-h-[48px] pl-[32px] w-11/12 ${d.id === boardStore.active ? " active" : " cursor-pointer text-muted-foreground"}`}
+                className={`board flex gap-4 items-center heading-m min-h-[48px] pl-[32px] w-11/12 ${d.id === boardStore.activeEntity ? " active" : " cursor-pointer text-muted-foreground"}`}
                 onClick={() => handleBoardChange(d.id)}
               >
                 <i className="board-icon"></i> {d.name}

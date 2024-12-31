@@ -1,13 +1,20 @@
 import { DBContext } from "@/database";
-import BoardSchema, { BoardRequestSchema } from "@/database/schemas/board";
+import { BoardRequestSchema } from "@/database/schemas/board";
 import ColumnSchema from "@/database/schemas/column";
-import { createBoard } from "@/database/services/board";
+import { createBoard, getBoardWithColumns } from "@/database/services/board";
 import { useToast } from "@/hooks/use-toast";
-import { StoreDispatchType } from "@/store";
+import { StoreDispatchType, StoreSelectorType } from "@/store";
 import { fetchBoards } from "@/store/board";
-import { forwardRef, useContext, useImperativeHandle, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
@@ -16,7 +23,7 @@ import { Label } from "../ui/label";
 
 interface BoardDialogProps {
   onClose?: (v: string) => void;
-  value?: BoardSchema;
+  isEditMode?: boolean;
 }
 
 interface BoardDialogRef {
@@ -25,6 +32,7 @@ interface BoardDialogRef {
 }
 
 interface BoardForm {
+  id: string;
   name: string;
   columns: ColumnSchema[];
 }
@@ -32,15 +40,19 @@ interface BoardForm {
 const CreateEditBoardDialog = forwardRef<
   BoardDialogRef | null,
   BoardDialogProps
->(({ onClose = () => {} }, ref) => {
+>(({ onClose = () => {}, isEditMode = false }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const db = useContext(DBContext);
   const { toast } = useToast();
 
   const [isInProgress, setIsInProgress] = useState(false);
+
+  const activeBoard = useSelector<StoreSelectorType, string>(
+    (state) => state.board.activeEntity
+  );
   const dispatch = useDispatch<StoreDispatchType>();
 
-  const { control, handleSubmit, reset } = useForm<BoardForm>({
+  const { control, handleSubmit, reset, setValue } = useForm<BoardForm>({
     defaultValues: {
       name: "",
       columns: [],
@@ -68,6 +80,19 @@ const CreateEditBoardDialog = forwardRef<
     };
   });
 
+  const fetchBoardById = useCallback(async () => {
+    const data = await getBoardWithColumns(db, activeBoard);
+    setValue("id", data.id);
+    setValue("name", data.name);
+    setValue("columns", data.columns);
+  }, [db, activeBoard, setValue]);
+
+  useEffect(() => {
+    if (isOpen && isEditMode) {
+      fetchBoardById();
+    }
+  }, [isOpen, isEditMode, fetchBoardById]);
+
   const handleClose = (value?: string) => {
     setIsOpen(false);
     onClose(value);
@@ -94,7 +119,7 @@ const CreateEditBoardDialog = forwardRef<
 
     try {
       const board: BoardRequestSchema = {
-        id: "",
+        id: data.id,
         name: data.name,
         columns: data.columns
           .filter((c) => c.name)
@@ -111,7 +136,7 @@ const CreateEditBoardDialog = forwardRef<
       handleClose("Success");
       toast({
         title: "Success",
-        description: "Board created successfully.",
+        description: `Board ${isEditMode ? "updated" : "created"} successfully.`,
         variant: "success",
       });
 
@@ -131,7 +156,9 @@ const CreateEditBoardDialog = forwardRef<
     <Dialog open={isOpen} onOpenChange={() => isOpen && handleClose()}>
       <DialogContent className="bg-accent">
         <DialogHeader className="mb-4">
-          <DialogTitle className="heading-l">Add New Board</DialogTitle>
+          <DialogTitle className="heading-l">
+            {isEditMode ? "Edit" : `Add New`} Board
+          </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(handleCreateBoard)}>
           <div className="flex flex-col gap-1.5 mb-4">
@@ -178,7 +205,7 @@ const CreateEditBoardDialog = forwardRef<
             </div>
           </div>
           <Button className="w-full mt-3" type="submit" disabled={isInProgress}>
-            Create New Board
+            {isEditMode ? "Save Changes" : "Create New Board"}
           </Button>
         </form>
       </DialogContent>

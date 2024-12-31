@@ -16,7 +16,8 @@ interface ConfirmationDialogProps {
   message: string;
   confirmButtonText: string;
   cancelButtonText: string;
-  onClose?: () => void;
+  onConfirm?: () => void;
+  onCancel?: () => void;
 }
 
 interface ConfirmationDialogRef {
@@ -29,14 +30,21 @@ const ConfirmationDialog = forwardRef<
   ConfirmationDialogProps
 >(
   (
-    { title, message, confirmButtonText, cancelButtonText, onClose = () => {} },
+    {
+      title,
+      message,
+      confirmButtonText,
+      cancelButtonText,
+      onConfirm = () => {},
+      onCancel = () => {},
+    },
     ref
   ) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const handleClose = () => {
       setIsOpen(false);
-      onClose();
+      onCancel();
     };
 
     useImperativeHandle(ref, () => {
@@ -63,7 +71,7 @@ const ConfirmationDialog = forwardRef<
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex justify-between w-full">
-            <AlertDialogAction style={{ width: "48%" }}>
+            <AlertDialogAction style={{ width: "48%" }} onClick={onConfirm}>
               {confirmButtonText}
             </AlertDialogAction>
             <AlertDialogCancel style={{ width: "48%" }} onClick={handleClose}>

@@ -64,4 +64,75 @@ async function getAllBoards(db: KanbanDB) {
   }
 }
 
-export { createBoard, getAllBoards, updateBoard };
+async function getBoardById(db: KanbanDB, id: string) {
+  try {
+    const board = await db.get("boards", id);
+    return board;
+  } catch (error) {
+    throw new Error(
+      error?.message ?? "Something went wrong, please try again."
+    );
+  }
+}
+
+async function getBoardWithColumns(db: KanbanDB, id: string) {
+  try {
+    const board = await db.get("boards", id);
+    const columns = await db.getAllFromIndex("columns", "column_board_idx", id);
+
+    return {
+      ...board,
+      columns,
+    };
+  } catch (error) {
+    throw new Error(
+      error?.message ?? "Something went wrong, please try again."
+    );
+  }
+}
+
+async function deleteBoard(db: KanbanDB, id: string) {
+  try {
+    await db.delete("boards", id);
+
+    const deleteColumns = () => {
+      return new Promise((resolve, reject) => {
+        const colTransaction = db.transaction("columns", "readwrite");
+        const colStore = colTransaction.objectStore("columns");
+        const colIdx = colStore.index("column_board_idx");
+
+        const colCursor = colIdx.openCursor(IDBKeyRange.only(id));
+
+        colCursor.then(async (cursor) => {
+          while (cursor) {
+            cursor.delete();
+            cursor = await cursor.continue();
+          }
+        });
+
+        colTransaction.oncomplete = () => {
+          resolve("Success");
+        };
+
+        colTransaction.onerror = () => {
+          reject("Failed to delete, please try again.");
+        };
+      });
+    };
+
+    await deleteColumns();
+  } catch (error) {
+    throw new Error(
+      error?.message ?? "Something went wrong, please try again."
+    );
+  }
+}
+
+export {
+  createBoard,
+  deleteBoard,
+  getAllBoards,
+  getBoardById,
+  getBoardWithColumns,
+  updateBoard,
+};
