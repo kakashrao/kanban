@@ -1,17 +1,23 @@
+import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 import ColumnSchema from "../schemas/column";
+import { getColumnById } from "../services/column";
 import { KanbanDB } from "../types";
 
 class Column implements ColumnSchema {
   id: string;
   name: string;
+  order: number;
   boardId: string;
+  createdAt?: string;
+  updatedAt?: string;
 
   constructor(obj: ColumnSchema) {
-    const { id, name, boardId } = obj;
+    const { id, name, boardId, order } = obj;
     this.id = id ?? "";
     this.name = name;
     this.boardId = boardId;
+    this.order = order;
 
     if (!this.id) {
       this.id = uuidv4();
@@ -33,17 +39,22 @@ class Column implements ColumnSchema {
 
     this.validate();
 
-    const column = {
+    const column: ColumnSchema = {
       id: this.id,
       name: this.name,
+      order: this.order,
       boardId: this.boardId,
     };
 
+    column.updatedAt = moment().format();
+
     if (!column.id) {
       column.id = uuidv4();
+      column.createdAt = moment().format();
       await db.add("columns", column);
     } else {
-      await db.put("columns", column);
+      const storedColumn = await getColumnById(db, column.id);
+      await db.put("columns", { ...storedColumn, ...column });
     }
 
     return column;

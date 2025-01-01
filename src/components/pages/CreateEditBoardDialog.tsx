@@ -1,7 +1,8 @@
 import { DBContext } from "@/database";
 import { BoardRequestSchema } from "@/database/schemas/board";
 import ColumnSchema from "@/database/schemas/column";
-import { createBoard, getBoardWithColumns } from "@/database/services/board";
+import { getBoardWithColumns, updateBoard } from "@/database/services/board";
+import { bulkDeleteColumns } from "@/database/services/column";
 import { useToast } from "@/hooks/use-toast";
 import { StoreDispatchType, StoreSelectorType } from "@/store";
 import { fetchBoards } from "@/store/board";
@@ -47,18 +48,20 @@ const CreateEditBoardDialog = forwardRef<
   const { toast } = useToast();
 
   const [isInProgress, setIsInProgress] = useState(false);
+  const [removedColumns, setRemovedColumns] = useState([]);
 
   const activeBoard = useSelector<StoreSelectorType, string>(
     (state) => state.board.activeEntity
   );
   const dispatch = useDispatch<StoreDispatchType>();
 
-  const { control, handleSubmit, reset, setValue } = useForm<BoardForm>({
-    defaultValues: {
-      name: "",
-      columns: [],
-    },
-  });
+  const { control, handleSubmit, reset, setValue, getValues } =
+    useForm<BoardForm>({
+      defaultValues: {
+        name: "",
+        columns: [],
+      },
+    });
   const {
     fields: columns,
     remove: removeColumn,
@@ -81,6 +84,12 @@ const CreateEditBoardDialog = forwardRef<
     };
   });
 
+  const handleColumnRemove = (columnIdx: number) => {
+    const columnId = getValues(`columns.${columnIdx}.id`); // form hook overrides "id" with its own uuid, so will have to access id like this.
+    setRemovedColumns((values) => [...values, columnId]);
+    removeColumn(columnIdx);
+  };
+
   const fetchBoardById = useCallback(async () => {
     const data = await getBoardWithColumns(db, activeBoard);
     setValue("id", data.id);
@@ -98,10 +107,16 @@ const CreateEditBoardDialog = forwardRef<
     setIsOpen(false);
     onClose(value);
     reset();
+    setRemovedColumns([]);
   };
 
   const addNewColumn = () => {
-    addColumn({ id: "column_" + uuidv4(), name: "", boardId: "" });
+    addColumn({
+      id: "column_" + uuidv4(),
+      order: columns.length + 1,
+      name: "",
+      boardId: "",
+    });
   };
 
   const handleCreateBoard = async (data: BoardForm) => {
@@ -132,7 +147,8 @@ const CreateEditBoardDialog = forwardRef<
           }),
       };
 
-      await createBoard(db, board);
+      await updateBoard(db, board);
+      await bulkDeleteColumns(db, removedColumns);
 
       handleClose("Success");
       toast({
@@ -203,7 +219,7 @@ const CreateEditBoardDialog = forwardRef<
                       src="/assets/images/icon-cross.svg"
                       alt="Cross"
                       className="cursor-pointer"
-                      onClick={() => removeColumn(columnIdx)}
+                      onClick={() => handleColumnRemove(columnIdx)}
                     />
                   )}
                 </div>

@@ -1,5 +1,7 @@
+import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 import TaskSchema from "../schemas/task";
+import { getTaskById } from "../services/task";
 import { KanbanDB } from "../types";
 
 class Task implements TaskSchema {
@@ -8,14 +10,18 @@ class Task implements TaskSchema {
   description: string;
   subtasks: { title: string; isCompleted: boolean }[];
   columnId: string;
+  boardId: string;
+  createdAt?: string;
+  updatedAt?: string;
 
   constructor(obj: TaskSchema) {
-    const { id, title, description, subtasks, columnId } = obj;
+    const { id, title, description, subtasks, columnId, boardId } = obj;
     this.id = id ?? "";
     this.title = title;
     this.description = description ?? "";
     this.subtasks = subtasks ?? [];
     this.columnId = columnId;
+    this.boardId = boardId;
 
     if (!this.id) {
       this.id = uuidv4();
@@ -39,19 +45,24 @@ class Task implements TaskSchema {
 
     this.validate();
 
-    const task = {
+    const task: TaskSchema = {
       id: this.id,
       title: this.title,
       description: this.description,
       subtasks: this.subtasks,
       columnId: this.columnId,
+      boardId: this.boardId,
     };
+
+    task.updatedAt = moment().format();
 
     if (!task.id) {
       task.id = uuidv4();
+      task.createdAt = moment().format();
       await db.add("tasks", task);
     } else {
-      await db.put("tasks", task);
+      const storedTask = await getTaskById(db, task.id);
+      await db.put("tasks", { ...storedTask, ...task });
     }
 
     return task;

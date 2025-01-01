@@ -8,6 +8,8 @@ interface TaskSchema {
   }[];
   boardId: string;
   columnId: string; // Column Id
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export default TaskSchema;

@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { boardReducer } from "./board";
-import { themeReducers } from "./theme";
+import { taskReducer } from "./task";
+import { themeReducer } from "./theme";
 
 const store = configureStore({
   reducer: {
-    theme: themeReducers,
+    theme: themeReducer,
     board: boardReducer,
+    task: taskReducer,
   },
 });
 

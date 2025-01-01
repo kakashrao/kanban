@@ -6,6 +6,7 @@ import useWindowDimensions from "@/hooks/windowDimensions";
 import { isMobile } from "@/lib/utils";
 import { StoreDispatchType, StoreSelectorType } from "@/store";
 import { boardActions, boardSelectors, fetchBoards } from "@/store/board";
+import { fetchTasksByBoard } from "@/store/task";
 import { FC, useContext, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../ui/button";
@@ -43,6 +44,12 @@ const Header: FC = () => {
 
   const handleEditBoard = () => {
     boardDialogRef.current.open();
+  };
+
+  const handleBoardDialogClose = (result: string) => {
+    if (result) {
+      dispatch(fetchTasksByBoard({ db, boardId: activeBoard.id }));
+    }
   };
 
   const handleDeleteBoard = async (showDialog: boolean) => {
@@ -156,7 +163,11 @@ const Header: FC = () => {
       {activeBoard && (
         <>
           <CreateEditTaskDialog ref={taskDialogRef} />
-          <CreateEditBoardDialog ref={boardDialogRef} isEditMode={true} />
+          <CreateEditBoardDialog
+            ref={boardDialogRef}
+            isEditMode={true}
+            onClose={handleBoardDialogClose}
+          />
           <ConfirmationDialog
             ref={confirmDialogRef}
             title="Delete this board?"

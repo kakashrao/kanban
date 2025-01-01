@@ -1,27 +1,51 @@
-import { StoreSelectorType } from "@/store";
-import { FC, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { DBContext } from "@/database";
+import { StoreDispatchType, StoreSelectorType } from "@/store";
+import { fetchTasksByBoard } from "@/store/task";
+import { FC, useContext, useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import CreateEditBoardDialog, { BoardDialogRef } from "./CreateEditBoardDialog";
 import TaskColumn from "./TaskColumn";
 import TaskInfoDialog from "./TaskInfoDialog";
 
 const Tasks: FC = () => {
+  const activeBoardId = useSelector<StoreSelectorType, string>(
+    (state) => state.board.activeEntity
+  );
+  const taskStore = useSelector<StoreSelectorType, StoreSelectorType["task"]>(
+    (state) => state.task
+  );
+  const dispatch = useDispatch<StoreDispatchType>();
+
+  const db = useContext(DBContext);
   const boardDialogRef = useRef<BoardDialogRef | null>(null);
 
   const [open, setOpen] = useState(false);
-  const [tasks, setTasks] = useState([1, 2, 3, 4, 5, 6, 7, 7, 8, 8]);
+
+  useEffect(() => {
+    dispatch(fetchTasksByBoard({ db, boardId: activeBoardId }));
+  }, [dispatch, db, activeBoardId]);
 
   const handleAddColumn = () => {
     (boardDialogRef.current as BoardDialogRef).open();
   };
 
+  const handleBoardDialogClose = (result: string) => {
+    if (result) {
+      dispatch(fetchTasksByBoard({ db, boardId: activeBoardId }));
+    }
+  };
+
   return (
     <div className="h-full flex justify-center items-center">
-      {!tasks.length ? (
+      {activeBoardId && taskStore.entities.length ? (
         <section className="flex gap-8 bg-content w-full h-full p-7 overflow-auto">
-          {tasks.map((task) => (
-            <TaskColumn onAddColumn={handleAddColumn} />
+          {taskStore.entities.map((task) => (
+            <TaskColumn
+              key={task.columnId}
+              task={task}
+              onAddColumn={handleAddColumn}
+            />
           ))}
         </section>
       ) : (
@@ -32,6 +56,7 @@ const Tasks: FC = () => {
         ref={boardDialogRef}
         columnsOnly={true}
         isEditMode={true}
+        onClose={handleBoardDialogClose}
       />
     </div>
   );
