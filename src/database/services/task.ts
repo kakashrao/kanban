@@ -1,4 +1,24 @@
+import Task from "../models/task";
+import TaskSchema from "../schemas/task";
 import { KanbanDB } from "../types";
+
+async function addOrUpdateTask(db: KanbanDB | null, value: TaskSchema) {
+  const task = new Task({ ...value });
+
+  try {
+    const savedTask = await task.save(db);
+
+    if (!savedTask) {
+      throw new Error("Failed to create board, please try again.");
+    }
+
+    return savedTask;
+  } catch (error: any) {
+    throw new Error(
+      error?.message ?? "Something went wrong, please try again."
+    );
+  }
+}
 
 async function getTaskById(db: KanbanDB, id: string) {
   try {
@@ -24,4 +44,4 @@ async function getTasksByBoardId(db: KanbanDB | null, boardId: string) {
   }
 }
 
-export { getTaskById, getTasksByBoardId };
+export { addOrUpdateTask, getTaskById, getTasksByBoardId };

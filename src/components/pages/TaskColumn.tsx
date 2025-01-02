@@ -25,7 +25,7 @@ const TaskColumn: FC<TaskColumnProps> = ({ onAddColumn = () => {}, task }) => {
           </p>
         </div>
       ) : task.items.length ? (
-        <div className="grow">
+        <div className="grow flex flex-col gap-4">
           {task.items.map((t) => (
             <div key={t.id} className="task-card">
               <h1 className="heading-m text-primary-foreground text-wrap">

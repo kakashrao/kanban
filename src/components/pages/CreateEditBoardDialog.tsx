@@ -1,7 +1,10 @@
 import { DBContext } from "@/database";
 import { BoardRequestSchema } from "@/database/schemas/board";
 import ColumnSchema from "@/database/schemas/column";
-import { getBoardWithColumns, updateBoard } from "@/database/services/board";
+import {
+  addOrUpdateBoard,
+  getBoardWithColumns,
+} from "@/database/services/board";
 import { bulkDeleteColumns } from "@/database/services/column";
 import { useToast } from "@/hooks/use-toast";
 import { StoreDispatchType, StoreSelectorType } from "@/store";
@@ -59,7 +62,14 @@ const CreateEditBoardDialog = forwardRef<
     useForm<BoardForm>({
       defaultValues: {
         name: "",
-        columns: [],
+        columns: [
+          {
+            id: "column_" + uuidv4(),
+            order: 1,
+            name: "",
+            boardId: "",
+          },
+        ],
       },
     });
   const {
@@ -75,7 +85,6 @@ const CreateEditBoardDialog = forwardRef<
     return {
       open() {
         setIsOpen(true);
-        addNewColumn();
       },
       close() {
         setIsOpen(false);
@@ -147,7 +156,7 @@ const CreateEditBoardDialog = forwardRef<
           }),
       };
 
-      await updateBoard(db, board);
+      await addOrUpdateBoard(db, board);
       await bulkDeleteColumns(db, removedColumns);
 
       handleClose("Success");

@@ -2,7 +2,7 @@ interface TaskSchema {
   id: string;
   title: string;
   description: string;
-  subtasks: {
+  subTasks: {
     title: string;
     isCompleted: boolean;
   }[];

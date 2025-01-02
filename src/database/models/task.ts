@@ -8,18 +8,18 @@ class Task implements TaskSchema {
   id: string;
   title: string;
   description: string;
-  subtasks: { title: string; isCompleted: boolean }[];
+  subTasks: { title: string; isCompleted: boolean }[];
   columnId: string;
   boardId: string;
   createdAt?: string;
   updatedAt?: string;
 
   constructor(obj: TaskSchema) {
-    const { id, title, description, subtasks, columnId, boardId } = obj;
+    const { id, title, description, subTasks, columnId, boardId } = obj;
     this.id = id ?? "";
     this.title = title;
     this.description = description ?? "";
-    this.subtasks = subtasks ?? [];
+    this.subTasks = subTasks ?? [];
     this.columnId = columnId;
     this.boardId = boardId;
 
@@ -49,7 +49,7 @@ class Task implements TaskSchema {
       id: this.id,
       title: this.title,
       description: this.description,
-      subtasks: this.subtasks,
+      subTasks: this.subTasks,
       columnId: this.columnId,
       boardId: this.boardId,
     };
