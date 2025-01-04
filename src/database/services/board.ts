@@ -98,7 +98,33 @@ async function deleteBoard(db: KanbanDB, id: string) {
       });
     };
 
+    const deleteTasks = () => {
+      return new Promise((resolve, reject) => {
+        const taskTransaction = db.transaction("tasks", "readwrite");
+        const taskStore = taskTransaction.objectStore("tasks");
+        const taskIdx = taskStore.index("task_board_idx");
+
+        const taskCursor = taskIdx.openCursor(IDBKeyRange.only(id));
+
+        taskCursor.then(async (cursor) => {
+          while (cursor) {
+            cursor.delete();
+            cursor = await cursor.continue();
+          }
+        });
+
+        taskTransaction.oncomplete = () => {
+          resolve("Success");
+        };
+
+        taskTransaction.onerror = () => {
+          reject("Failed to delete, please try again.");
+        };
+      });
+    };
+
     await deleteColumns();
+    await deleteTasks();
   } catch (error) {
     throw new Error(
       error?.message ?? "Something went wrong, please try again."
