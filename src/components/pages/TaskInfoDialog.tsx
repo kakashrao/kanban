@@ -104,9 +104,10 @@ const TaskInfoDialog = forwardRef<
       (confirmDialogRef.current as ConfirmationDialogRef).open();
     } else {
       try {
-        await deleteTaskById(db, activeBoardId);
+        await deleteTaskById(db, task.id);
         dispatch(fetchTasksByBoard({ db, boardId: activeBoardId }));
         (confirmDialogRef.current as ConfirmationDialogRef).close();
+        setIsOpen(false);
       } catch (error) {
         toast({
           title: "Error",

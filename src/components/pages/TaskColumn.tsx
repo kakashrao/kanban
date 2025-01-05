@@ -22,7 +22,10 @@ const TaskColumn: FC<TaskColumnProps> = ({
   return (
     <section className="flex flex-col gap-5 w-[300px] min-w-[300px] h-full">
       <div className={`flex gap-2${!task.columnId ? " invisible" : ""}`}>
-        <span className="colored-point"></span>
+        <span
+          className="colored-point"
+          style={{ backgroundColor: task.indicatingColor }}
+        ></span>
         <p className="heading-s uppercase text-muted-foreground">
           {task.columnName} ({task.items.length})
         </p>

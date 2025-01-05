@@ -7,6 +7,7 @@ import {
 } from "@/database/services/board";
 import { bulkDeleteColumns } from "@/database/services/column";
 import { useToast } from "@/hooks/use-toast";
+import { randomHsl } from "@/lib/utils";
 import { StoreDispatchType, StoreSelectorType } from "@/store";
 import { fetchBoards } from "@/store/board";
 import {
@@ -152,6 +153,7 @@ const CreateEditBoardDialog = forwardRef<
             return {
               ...c,
               id: c.id.startsWith("column_") ? "" : c.id,
+              indicatingColor: c?.indicatingColor ?? randomHsl(),
             };
           }),
       };

@@ -9,15 +9,17 @@ class Column implements ColumnSchema {
   name: string;
   order: number;
   boardId: string;
+  indicatingColor?: string;
   createdAt?: string;
   updatedAt?: string;
 
   constructor(obj: ColumnSchema) {
-    const { id, name, boardId, order } = obj;
+    const { id, name, boardId, order, indicatingColor } = obj;
     this.id = id ?? "";
     this.name = name;
     this.boardId = boardId;
     this.order = order;
+    this.indicatingColor = indicatingColor ?? "red";
 
     if (!this.id) {
       this.id = uuidv4();
@@ -44,6 +46,7 @@ class Column implements ColumnSchema {
       name: this.name,
       order: this.order,
       boardId: this.boardId,
+      indicatingColor: this.indicatingColor,
     };
 
     column.updatedAt = moment().format();

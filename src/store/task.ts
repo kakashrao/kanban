@@ -9,6 +9,7 @@ type TaskItem = Omit<TaskSchema, "boardId" | "columnId">;
 interface Task {
   columnId: string;
   columnName: string;
+  indicatingColor: string;
   items: TaskItem[];
 }
 
@@ -40,6 +41,7 @@ const fetchTasksByBoard = createAsyncThunk(
       tasksWithCol.push({
         columnId: col.id,
         columnName: col.name,
+        indicatingColor: col?.indicatingColor ?? "red",
         items: taskObj[col.id] ?? [],
       });
     });
@@ -47,6 +49,7 @@ const fetchTasksByBoard = createAsyncThunk(
     tasksWithCol.push({
       columnId: "",
       columnName: "",
+      indicatingColor: "",
       items: [],
     });
 

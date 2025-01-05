@@ -9,4 +9,8 @@ function isMobile(width: number) {
   return width < 450;
 }
 
-export { cn, isMobile };
+function randomHsl() {
+  return `hsla(${Math.random() * 360}, 100%, 50%, 1)`;
+}
+
+export { cn, isMobile, randomHsl };
