@@ -44,4 +44,14 @@ async function getTasksByBoardId(db: KanbanDB | null, boardId: string) {
   }
 }
 
-export { addOrUpdateTask, getTaskById, getTasksByBoardId };
+async function deleteTaskById(db: KanbanDB | null, id: string) {
+  try {
+    await db.delete("tasks", id);
+  } catch (error) {
+    throw new Error(
+      error?.message ?? "Something went wrong, please try again."
+    );
+  }
+}
+
+export { addOrUpdateTask, deleteTaskById, getTaskById, getTasksByBoardId };

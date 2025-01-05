@@ -101,6 +101,7 @@ const CreateEditTaskDialog = forwardRef<TaskDialogRef | null, TaskDialogProps>(
             setValue("id", task.id);
             setValue("title", task.title);
             setValue("description", task.description);
+            setValue("subTasks", task.subTasks);
             setValue("columnId", task.columnId);
             setValue("boardId", task.boardId);
           }
@@ -281,3 +282,4 @@ const CreateEditTaskDialog = forwardRef<TaskDialogRef | null, TaskDialogProps>(
 );
 
 export default CreateEditTaskDialog;
+export type { TaskDialogProps, TaskDialogRef };

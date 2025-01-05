@@ -1,12 +1,14 @@
 import { DBContext } from "@/database";
+import TaskSchema from "@/database/schemas/task";
 import { StoreDispatchType, StoreSelectorType } from "@/store";
 import { fetchTasksByBoard } from "@/store/task";
 import { FC, useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import CreateEditBoardDialog, { BoardDialogRef } from "./CreateEditBoardDialog";
+import CreateEditTaskDialog, { TaskDialogRef } from "./CreateEditTaskDialog";
 import TaskColumn from "./TaskColumn";
-import TaskInfoDialog from "./TaskInfoDialog";
+import TaskInfoDialog, { TaskInfoDialogRef } from "./TaskInfoDialog";
 
 const Tasks: FC = () => {
   const activeBoardId = useSelector<StoreSelectorType, string>(
@@ -19,8 +21,10 @@ const Tasks: FC = () => {
 
   const db = useContext(DBContext);
   const boardDialogRef = useRef<BoardDialogRef | null>(null);
+  const taskInfoDialogRef = useRef<TaskInfoDialogRef | null>(null);
+  const taskDialogRef = useRef<TaskDialogRef>();
 
-  const [open, setOpen] = useState(false);
+  const [activeTask, setActiveTask] = useState<TaskSchema | null>(null);
 
   useEffect(() => {
     dispatch(fetchTasksByBoard({ db, boardId: activeBoardId }));
@@ -36,6 +40,15 @@ const Tasks: FC = () => {
     }
   };
 
+  const handleShowTaskInfo = (t: TaskSchema) => {
+    setActiveTask(t);
+    (taskInfoDialogRef.current as TaskInfoDialogRef).open();
+  };
+
+  const handleEditTask = () => {
+    taskDialogRef.current.open();
+  };
+
   return (
     <div className="h-full flex justify-center items-center">
       {activeBoardId && taskStore.entities.length ? (
@@ -45,13 +58,19 @@ const Tasks: FC = () => {
               key={task.columnId}
               task={task}
               onAddColumn={handleAddColumn}
+              onshowTaskInfo={handleShowTaskInfo}
             />
           ))}
         </section>
       ) : (
         <EmptyTasks onAdd={handleAddColumn} />
       )}
-      <TaskInfoDialog open={open} onClose={() => setOpen(false)} />
+      <CreateEditTaskDialog ref={taskDialogRef} editedTaskId={activeTask?.id} />
+      <TaskInfoDialog
+        ref={taskInfoDialogRef}
+        task={activeTask}
+        onEdit={handleEditTask}
+      />
       <CreateEditBoardDialog
         ref={boardDialogRef}
         columnsOnly={true}

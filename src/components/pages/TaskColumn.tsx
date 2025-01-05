@@ -1,12 +1,24 @@
+import TaskSchema from "@/database/schemas/task";
+import { StoreSelectorType } from "@/store";
 import { Task } from "@/store/task";
 import { FC } from "react";
+import { useSelector } from "react-redux";
 
 interface TaskColumnProps {
   task: Task;
   onAddColumn?: () => void;
+  onshowTaskInfo?: (task: TaskSchema) => void;
 }
 
-const TaskColumn: FC<TaskColumnProps> = ({ onAddColumn = () => {}, task }) => {
+const TaskColumn: FC<TaskColumnProps> = ({
+  onAddColumn = () => {},
+  task,
+  onshowTaskInfo,
+}) => {
+  const activeBoardId = useSelector<StoreSelectorType, string>(
+    (state) => state.board.activeEntity
+  );
+
   return (
     <section className="flex flex-col gap-5 w-[300px] min-w-[300px] h-full">
       <div className={`flex gap-2${!task.columnId ? " invisible" : ""}`}>
@@ -27,11 +39,23 @@ const TaskColumn: FC<TaskColumnProps> = ({ onAddColumn = () => {}, task }) => {
       ) : task.items.length ? (
         <div className="grow flex flex-col gap-4">
           {task.items.map((t) => (
-            <div key={t.id} className="task-card">
+            <div
+              key={t.id}
+              className="task-card cursor-pointer"
+              onClick={() =>
+                onshowTaskInfo({
+                  ...t,
+                  columnId: task.columnId,
+                  boardId: activeBoardId,
+                })
+              }
+            >
               <h1 className="heading-m text-primary-foreground text-wrap">
                 {t.title}
               </h1>
-              <p className="body-m text-muted-foreground">0 of 3 subtasks</p>
+              {t.subTasks?.length && (
+                <p className="body-m text-muted-foreground">{`${t.subTasks.filter((st) => st.isCompleted).length} of ${t.subTasks.length} subtasks`}</p>
+              )}
             </div>
           ))}
         </div>

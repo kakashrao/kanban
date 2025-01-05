@@ -4,10 +4,12 @@ import { getTasksByBoardId } from "@/database/services/task";
 import { KanbanDB } from "@/database/types";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+type TaskItem = Omit<TaskSchema, "boardId" | "columnId">;
+
 interface Task {
   columnId: string;
   columnName: string;
-  items: Omit<TaskSchema, "boardId" | "columnId">[];
+  items: TaskItem[];
 }
 
 const fetchTasksByBoard = createAsyncThunk(
@@ -18,7 +20,7 @@ const fetchTasksByBoard = createAsyncThunk(
     const tasksWithCol: Task[] = [];
 
     const taskObj: {
-      [key: string]: Omit<TaskSchema, "boardId" | "columnId">[];
+      [key: string]: TaskItem[];
     } = {};
 
     tasks.forEach((task) => {
@@ -30,7 +32,7 @@ const fetchTasksByBoard = createAsyncThunk(
         id: task.id,
         title: task.title,
         description: task.description,
-        subtasks: task.subtasks,
+        subTasks: task.subTasks,
       });
     });
 
@@ -83,4 +85,4 @@ const taskActions = taskSlice.actions;
 const taskReducer = taskSlice.reducer;
 
 export { fetchTasksByBoard, taskActions, taskReducer };
-export type { Task };
+export type { Task, TaskItem };
