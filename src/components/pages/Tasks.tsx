@@ -2,13 +2,30 @@ import { DBContext } from "@/database";
 import TaskSchema from "@/database/schemas/task";
 import { StoreDispatchType, StoreSelectorType } from "@/store";
 import { fetchTasksByBoard } from "@/store/task";
-import { FC, useContext, useEffect, useRef, useState } from "react";
+import {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import CreateEditBoardDialog, { BoardDialogRef } from "./CreateEditBoardDialog";
 import CreateEditTaskDialog, { TaskDialogRef } from "./CreateEditTaskDialog";
 import TaskColumn from "./TaskColumn";
 import TaskInfoDialog, { TaskInfoDialogRef } from "./TaskInfoDialog";
+import {
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import Droppable from "../shared/droppable";
+import { addOrUpdateTask } from "@/database/services/task";
+import { useToast } from "@/hooks/use-toast";
 
 const Tasks: FC = () => {
   const activeBoardId = useSelector<StoreSelectorType, string>(
@@ -19,16 +36,30 @@ const Tasks: FC = () => {
   );
   const dispatch = useDispatch<StoreDispatchType>();
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
+
   const db = useContext(DBContext);
   const boardDialogRef = useRef<BoardDialogRef | null>(null);
   const taskInfoDialogRef = useRef<TaskInfoDialogRef | null>(null);
   const taskDialogRef = useRef<TaskDialogRef>();
 
+  const { toast } = useToast();
+
   const [activeTask, setActiveTask] = useState<TaskSchema | null>(null);
 
-  useEffect(() => {
+  const fetchTasks = useCallback(() => {
     dispatch(fetchTasksByBoard({ db, boardId: activeBoardId }));
-  }, [dispatch, db, activeBoardId]);
+  }, [db, activeBoardId, dispatch]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
 
   const handleAddColumn = () => {
     (boardDialogRef.current as BoardDialogRef).open();
@@ -36,7 +67,7 @@ const Tasks: FC = () => {
 
   const handleBoardDialogClose = (result: string) => {
     if (result) {
-      dispatch(fetchTasksByBoard({ db, boardId: activeBoardId }));
+      fetchTasks();
     }
   };
 
@@ -49,19 +80,41 @@ const Tasks: FC = () => {
     taskDialogRef.current.open();
   };
 
+  const dropTask = async (event: DragEndEvent) => {
+    try {
+      const task: TaskSchema = {
+        ...(event.active.data.current as TaskSchema),
+        columnId: event.over.id as string,
+        boardId: activeBoardId,
+      };
+
+      await addOrUpdateTask(db, task);
+      fetchTasks();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="h-full flex justify-center items-center">
       {activeBoardId && taskStore.entities.length ? (
-        <section className="flex gap-8 bg-content w-full h-full p-7 overflow-auto">
-          {taskStore.entities.map((task) => (
-            <TaskColumn
-              key={task.columnId}
-              task={task}
-              onAddColumn={handleAddColumn}
-              onshowTaskInfo={handleShowTaskInfo}
-            />
-          ))}
-        </section>
+        <DndContext onDragEnd={dropTask} sensors={sensors}>
+          <section className="flex gap-8 bg-content w-full h-full p-7 overflow-auto">
+            {taskStore.entities.map((task) => (
+              <Droppable key={task.columnId} id={task.columnId}>
+                <TaskColumn
+                  task={task}
+                  onAddColumn={handleAddColumn}
+                  onshowTaskInfo={handleShowTaskInfo}
+                />
+              </Droppable>
+            ))}
+          </section>
+        </DndContext>
       ) : (
         <EmptyTasks onAdd={handleAddColumn} />
       )}

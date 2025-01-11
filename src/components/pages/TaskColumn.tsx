@@ -3,6 +3,7 @@ import { StoreSelectorType } from "@/store";
 import { Task } from "@/store/task";
 import { FC } from "react";
 import { useSelector } from "react-redux";
+import Draggable from "../shared/Draggable";
 
 interface TaskColumnProps {
   task: Task;
@@ -42,24 +43,25 @@ const TaskColumn: FC<TaskColumnProps> = ({
       ) : task.items.length ? (
         <div className="grow flex flex-col gap-4">
           {task.items.map((t) => (
-            <div
-              key={t.id}
-              className="task-card cursor-pointer"
-              onClick={() =>
-                onshowTaskInfo({
-                  ...t,
-                  columnId: task.columnId,
-                  boardId: activeBoardId,
-                })
-              }
-            >
-              <h1 className="heading-m text-primary-foreground text-wrap">
-                {t.title}
-              </h1>
-              {t.subTasks?.length && (
-                <p className="body-m text-muted-foreground">{`${t.subTasks.filter((st) => st.isCompleted).length} of ${t.subTasks.length} subtasks`}</p>
-              )}
-            </div>
+            <Draggable key={t.id} id={t.id} data={t}>
+              <div
+                className="task-card cursor-pointer"
+                onClick={() =>
+                  onshowTaskInfo({
+                    ...t,
+                    columnId: task.columnId,
+                    boardId: activeBoardId,
+                  })
+                }
+              >
+                <h1 className="heading-m text-primary-foreground text-wrap">
+                  {t.title}
+                </h1>
+                {t.subTasks?.length && (
+                  <p className="body-m text-muted-foreground">{`${t.subTasks.filter((st) => st.isCompleted).length} of ${t.subTasks.length} subtasks`}</p>
+                )}
+              </div>
+            </Draggable>
           ))}
         </div>
       ) : (
