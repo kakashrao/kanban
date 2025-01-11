@@ -23,9 +23,9 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import Droppable from "../shared/droppable";
 import { addOrUpdateTask } from "@/database/services/task";
 import { useToast } from "@/hooks/use-toast";
+import Droppable from "../shared/droppable";
 
 const Tasks: FC = () => {
   const activeBoardId = useSelector<StoreSelectorType, string>(
