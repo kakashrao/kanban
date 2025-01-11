@@ -1,3 +1,4 @@
+import moment from "moment";
 import Task from "../models/task";
 import TaskSchema from "../schemas/task";
 import { KanbanDB } from "../types";
@@ -36,7 +37,9 @@ async function getTasksByBoardId(db: KanbanDB | null, boardId: string) {
 
   try {
     const tasks = await db.getAllFromIndex("tasks", "task_board_idx", boardId);
-    return tasks;
+    return tasks.sort((t1, t2) =>
+      moment(t1.createdAt).isBefore(moment(t2.createdAt)) ? -1 : 1
+    );
   } catch (error: any) {
     throw new Error(
       error?.message ?? "Something went wrong, please try again."
