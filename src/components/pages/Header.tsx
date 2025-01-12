@@ -91,33 +91,35 @@ const Header: FC = () => {
       )}
 
       <div
-        className={`h-full flex items-center justify-between grow border-b theme-border bg-header${isMobile(screenWidth) ? " px-4" : " px-6"}`}
+        className={`h-full flex items-center justify-between grow border-b theme-border bg-header${isMobile(screenWidth) ? " px-5" : " px-6"}`}
       >
         <div className="flex items-center gap-4">
           {isMobile(screenWidth) && (
             <img src="/assets/images/logo-mobile.svg" alt="Kanban Logo" />
           )}
           {activeBoard && (
-            <h1 className="m-0 heading-xl text-primary-foreground flex gap-2 items-center">
-              {activeBoard.name}
-              {isMobile(screenWidth) && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild disabled={!isMobile(screenWidth)}>
+                <h1 className="m-0 heading-xl text-primary-foreground flex gap-2 items-center inline-block">
+                  <span className="truncate inline-block">
+                    {activeBoard.name}{" "}
+                  </span>
+                  {isMobile(screenWidth) && (
                     <img
                       src="/assets/images/icon-chevron-down.svg"
                       alt="down-chevron"
                     />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <SidePanel />
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-            </h1>
+                  )}
+                </h1>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <SidePanel />
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
         {activeBoard && (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-5">
             {isMobile(screenWidth) ? (
               <Button
                 size="icon"

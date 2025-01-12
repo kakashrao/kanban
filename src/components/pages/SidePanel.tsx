@@ -8,6 +8,7 @@ import { FC, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Switch } from "../ui/switch";
 import CreateEditBoardDialog, { BoardDialogRef } from "./CreateEditBoardDialog";
+import CustomTooltip from "../shared/CustomTooltip";
 
 const SidePanel: FC = () => {
   const themeStore = useSelector<StoreSelectorType, StoreSelectorType["theme"]>(
@@ -76,7 +77,10 @@ const SidePanel: FC = () => {
                 className={`board flex gap-4 items-center heading-m min-h-[48px] pl-[32px] w-11/12 ${d.id === boardStore.activeEntity ? " active" : " cursor-pointer text-muted-foreground"}`}
                 onClick={() => handleBoardChange(d.id)}
               >
-                <i className="board-icon"></i> {d.name}
+                <i className="board-icon"></i>{" "}
+                <CustomTooltip content={d.name}>
+                  <span className="truncate inline-block pr-2"> {d.name}</span>
+                </CustomTooltip>
               </li>
             ))}
           </menu>
