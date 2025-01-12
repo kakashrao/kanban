@@ -1,11 +1,10 @@
-import { DBContext } from "@/database";
 import { useToast } from "@/hooks/use-toast";
 import useWindowDimensions from "@/hooks/windowDimensions";
 import { isMobile } from "@/lib/utils";
 import { StoreDispatchType, StoreSelectorType } from "@/store";
-import { boardActions, fetchBoards } from "@/store/board";
+import { boardActions } from "@/store/board";
 import { themeActions } from "@/store/theme";
-import { FC, useContext, useEffect, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Switch } from "../ui/switch";
 import CreateEditBoardDialog, { BoardDialogRef } from "./CreateEditBoardDialog";
@@ -19,16 +18,11 @@ const SidePanel: FC = () => {
   );
 
   const dispatch = useDispatch<StoreDispatchType>();
-  const db = useContext(DBContext);
 
   const { toast } = useToast();
 
   const { screenWidth } = useWindowDimensions();
   const boardDialogRef = useRef<BoardDialogRef | null>(null);
-
-  useEffect(() => {
-    dispatch(fetchBoards(db));
-  }, [db, dispatch]);
 
   useEffect(() => {
     if (boardStore.hasError) {

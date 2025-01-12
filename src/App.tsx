@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import "./App.scss";
-import Auth from "./components/pages/Auth";
+// import Auth from "./components/pages/Auth";
 import Layout from "./components/pages/Layout";
 import { Toaster } from "./components/ui/toaster";
 import { DBContext, initializeDB } from "./database";
@@ -9,8 +13,9 @@ import { KanbanDB } from "./database/types";
 
 const router = createBrowserRouter([
   { path: "", element: <Layout /> },
-  { path: "/login", element: <Auth /> },
-  { path: "/signup", element: <Auth /> },
+  // { path: "/login", element: <Auth /> },
+  // { path: "/signup", element: <Auth /> },
+  { path: "*", element: <Navigate to={""} /> },
 ]);
 
 function App() {
