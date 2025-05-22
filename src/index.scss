@@ -451,3 +451,12 @@ label {
     );
   }
 }
+
+.dropdown-trigger-box {
+  min-width: 25px;
+  min-height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}

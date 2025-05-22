@@ -119,7 +119,7 @@ const Header: FC = () => {
           )}
         </div>
         {activeBoard && (
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-3">
             {isMobile(screenWidth) ? (
               <Button
                 size="icon"
@@ -136,13 +136,15 @@ const Header: FC = () => {
             )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <img
-                  src="/assets/images/icon-vertical-ellipsis.svg"
-                  alt="Vertical Ellipsis"
-                  className="cursor-pointer"
-                />
+                <div className="dropdown-trigger-box">
+                  <img
+                    src="/assets/images/icon-vertical-ellipsis.svg"
+                    alt="Vertical Ellipsis"
+                    className="cursor-pointer"
+                  />
+                </div>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent align="end">
                 <DropdownMenuGroup>
                   <DropdownMenuItem
                     className="text-muted-foreground"

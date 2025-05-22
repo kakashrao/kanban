@@ -63,16 +63,5 @@ export function getDefaultTasks(
       createdAt: moment().format(),
       updatedAt: moment().format(),
     },
-    {
-      id: uuidv4(),
-      title: "Feedback to Akash",
-      description:
-        "I will provide feedback to Akash on the project he has developed.",
-      subTasks: [],
-      boardId: boardId,
-      columnId: columnId,
-      createdAt: moment().add(5, "seconds").format(),
-      updatedAt: moment().add(5, "seconds").format(),
-    },
   ];
 }

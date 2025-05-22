@@ -144,13 +144,15 @@ const TaskInfoDialog = forwardRef<
             </DialogTitle>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <img
-                  src="/assets/images/icon-vertical-ellipsis.svg"
-                  alt="Vertical Ellipsis"
-                  className="cursor-pointer w-[4px]"
-                />
+                <div className="dropdown-trigger-box">
+                  <img
+                    src="/assets/images/icon-vertical-ellipsis.svg"
+                    alt="Vertical Ellipsis"
+                    className="cursor-pointer w-[4px]"
+                  />
+                </div>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuContent align="end">
                 <DropdownMenuGroup>
                   <DropdownMenuItem
                     className="text-muted-foreground"
